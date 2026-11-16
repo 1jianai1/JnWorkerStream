@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.selftest_*.csv
+run_*.csv
+host_test_log_*.txt
+logs/
+*.log

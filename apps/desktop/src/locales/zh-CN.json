@@ -1,0 +1,633 @@
+{
+  "app": {
+    "name": "JnWorkerStream",
+    "subtitle": "桌面控制台",
+    "version": "版本 {version}",
+    "p1": "P1 Mock"
+  },
+  "layout": {
+    "resizeSidebar": "调整侧栏宽度（拖动 / 方向键，双击复位）",
+    "resizeLinkControl": "调整链路控制栏宽度（拖动 / 方向键，双击复位）",
+    "resizeLogDetail": "调整日志详情宽度（拖动 / 方向键，双击复位）",
+    "resizeAudioSide": "调整音频副栏宽度（拖动 / 方向键，双击复位）",
+    "resizeKeyPanel": "调整属性面板宽度（拖动 / 方向键，双击复位）"
+  },
+  "nav": {    "section": {
+      "run": "运行",
+      "config": "配置",
+      "later": "后续阶段"
+    },
+    "link": "连接",
+    "logs": "日志",
+    "audio": "音频与语音",
+    "keys": "键位配置",
+    "settings": "设置",
+    "actions": "动作与脚本",
+    "ai": "AI 工具",
+    "laterBadge": "P2f",
+    "laterBadgeAi": "P5"
+  },
+  "topbar": {
+    "language": "界面语言",
+    "localeZh": "中",
+    "localeEn": "EN",
+    "mock": "演示数据",
+    "deviceOnline": "设备在线",
+    "deviceOffline": "设备离线"
+  },
+  "common": {
+    "retry": "重试",
+    "cancel": "取消",
+    "close": "关闭",
+    "copy": "复制",
+    "copied": "已复制",
+    "export": "导出",
+    "pause": "暂停",
+    "resume": "继续",
+    "clear": "清空",
+    "reset": "恢复默认",
+    "save": "保存",
+    "saving": "保存中…",
+    "saved": "已保存",
+    "apply": "配置",
+    "refresh": "刷新",
+    "search": "搜索",
+    "all": "全部",
+    "none": "无",
+    "loading": "加载中…",
+    "unknown": "未知",
+    "enabled": "已启用",
+    "disabled": "已停用",
+    "on": "开",
+    "off": "关",
+    "yes": "是",
+    "no": "否",
+    "seconds": "秒",
+    "milliseconds": "毫秒",
+    "rows": "行",
+    "items": "项",
+    "remove": "删除",
+    "add": "添加",
+    "edit": "编辑",
+    "test": "测试",
+    "confirm": "确认",
+    "discard": "放弃修改",
+    "dismiss": "关闭提示",
+    "details": "详情",
+    "noData": "暂无数据",
+    "notAvailable": "—",
+    "unsupported": "未开放",
+    "demoData": "演示数据，不连接真实设备",
+    "durationHms": "{h} 小时 {m} 分 {s} 秒",
+    "durationMs": "{m} 分 {s} 秒",
+    "windowTooSmall": {
+      "title": "窗口过小",
+      "text": "请将窗口调整为至少 900 × 600；更小尺寸会隐藏部分辅助信息。"
+    },
+    "scrollMore": "向下滚动查看更多"
+  },
+  "status": {
+    "link": {
+      "disconnected": "未连接",
+      "connecting": "连接中",
+      "connected": "已连接",
+      "reconnecting": "重连中",
+      "error": "错误"
+    },
+    "config": {
+      "applied": "设备已生效",
+      "pending": "待下发",
+      "failed": "下发失败",
+      "local": "仅本机"
+    },
+    "queue": "队列",
+    "dropped": "丢弃",
+    "reconnects": "重连",
+    "rx": "收",
+    "tx": "发"
+  },
+  "link": {
+    "title": "连接",
+    "subtitle": "选择链路、建立连接并观察实时统计。P1 使用模拟数据，不访问硬件。",
+    "control": {
+      "title": "链路控制",
+      "transport": "传输方式",
+      "serial": "串口",
+      "ble": "BLE",
+      "sim": "模拟",
+      "usb": "USB CDC",
+      "usbDevice": "USB 设备",
+      "usb": "USB CDC",
+      "network": "TCP/UDP",
+      "g24": "2.4G",
+      "port": "串口",
+      "device": "设备",
+      "deviceName": "设备名",
+      "pairedOnly": "仅已配对",
+      "autoReconnect": "断线自动重连",
+      "rate": "速率",
+      "size": "载荷",
+      "pattern": "模式",
+      "connect": "连接",
+      "disconnect": "断开",
+      "simulateLoss": "模拟断连",
+      "connecting": "正在连接…",
+      "hintDisconnected": "选择传输方式后点击连接。模拟链路可用于验证界面与统计。",
+      "hintUsb": "USB CDC 通过设备枚举连接；P1 仅演示状态与统计，不打开真实端口。",
+      "hintBle": "BLE 在 P2c 接入，P1 仅演示状态与参数。",
+      "hintSim": "模拟链路按 20 Hz 生成递增载荷，用于回归与截图。"
+    },
+    "banner": {
+      "errorTitle": "连接失败",
+      "errorDetail": "{code} · {detail}",
+      "nextStep": "检查端口是否被占用，或先关闭占用该端口的程序后重试。",
+      "reconnectingTitle": "链路已断开，正在自动重连",
+      "reconnectingText": "第 {attempt} 次重试，预计 {seconds} 秒后开始。",
+      "retryNow": "立即重试",
+      "stop": "停止重连"
+    },
+    "detail": {
+      "title": "链路详情",
+      "state": "状态",
+      "kind": "传输",
+      "address": "地址",
+      "port": "端口",
+      "usbDevice": "USB 设备",
+      "mtu": "MTU",
+      "maxPayload": "最大载荷",
+      "uptime": "在线时长",
+      "baud": "波特率",
+      "opened": "建立时间",
+      "empty": "尚未建立连接"
+    },
+    "stats": {
+      "frames": "帧数",
+      "framesNote": "累计解析成功",
+      "bytes": "接收字节",
+      "bytesNote": "含帧头与 CRC",
+      "crc": "CRC 错误",
+      "crcNote": "解析器自动重同步",
+      "throughput": "吞吐",
+      "throughputNote": "最近 1 秒",
+      "lost": "丢帧",
+      "lostNote": "按序号缺口统计",
+      "jitter": "抖动",
+      "jitterNote": "总体标准差",
+      "rate": "帧率",
+      "rateNote": "最近 1 秒",
+      "queue": "队列水位",
+      "queueNote": "超过 80% 时告警",
+      "dropped": "丢弃事件",
+      "droppedNote": "背压时丢弃最旧"
+    },
+    "recent": {
+      "title": "最近事件",
+      "empty": "还没有事件。连接后会在这里显示最近日志。",
+      "viewAll": "查看全部日志"
+    },
+    "capacity": {
+      "title": "容量与背压",
+      "queue": "帧队列",
+      "logs": "日志缓冲",
+      "hint": "队列满时丢弃最旧数据并累加 dropped，不改变链路状态。"
+    }
+  },
+  "logs": {
+    "title": "日志",
+    "subtitle": "按等级、来源和关键字筛选；长日志使用虚拟滚动，暂停只冻结渲染。",
+    "toolbar": {
+      "searchPlaceholder": "搜索消息、来源或键值…",
+      "level": "等级",
+      "domain": "来源",
+      "regex": "正则",
+      "pause": "暂停",
+      "resume": "继续",
+      "clear": "清空",
+      "export": "导出",
+      "autoScroll": "自动滚动",
+      "count": "{count} 行",
+      "shown": "显示 {shown} / {total} 行",
+      "shownShort": "{shown} / {total}",
+      "paused": "已暂停渲染",
+      "focusHint": "Ctrl+F 聚焦搜索"
+    },
+    "empty": {
+      "title": "暂无日志",
+      "text": "建立连接或执行操作后，日志会出现在这里。",
+      "filteredTitle": "没有匹配的日志",
+      "filteredText": "调整等级、来源或关键字后重试。",
+      "clearFilters": "清除筛选"
+    },
+    "autoScroll": {
+      "paused": "已暂停自动滚动",
+      "resume": "回到底部"
+    },
+    "detail": {
+      "title": "日志详情",
+      "empty": "选择一条日志查看详情。",
+      "time": "时间",
+      "level": "等级",
+      "domain": "来源",
+      "message": "消息",
+      "data": "附加数据",
+      "raw": "原始记录",
+      "copy": "复制详情"
+    },
+    "export": {
+      "doneTitle": "导出完成",
+      "doneText": "已导出 {rows} 行（{bytes}）。",
+      "empty": "当前筛选结果为空，未导出。"
+    },
+    "level": {
+      "trace": "TRACE",
+      "debug": "DEBUG",
+      "info": "INFO",
+      "warn": "WARN",
+      "error": "ERROR"
+    },
+    "domain": {
+      "link": "LINK",
+      "frame": "FRAME",
+      "data": "DATA",
+      "voice": "VOICE",
+      "stat": "STAT",
+      "echo": "ECHO",
+      "rec": "REC",
+      "app": "APP",
+      "key": "KEY"
+    }
+  },
+  "audio": {
+    "title": "音频与语音",
+    "subtitle": "PTT 分段、本地识别与文本注入的端到端状态。P1 用 Mock 演示全部状态。",
+    "voice": {
+      "title": "语音链路",
+      "eyebrow": "VOICE / ASR",
+      "enable": "启用语音",
+      "disable": "停用语音",
+      "simulatePtt": "模拟一次按键",
+      "cancel": "取消识别",
+      "retry": "重试识别",
+      "copyText": "复制文本",
+      "copyPath": "复制 WAV 路径",
+      "injectMode": "注入方式",
+      "injectAuto": "自动",
+      "injectSendinput": "SendInput",
+      "injectClipboard": "剪贴板",
+      "injectRecognizeOnly": "仅识别",
+      "state": {
+        "idle": "待机",
+        "recording": "录音中",
+        "finalizing": "封段中",
+        "queued": "排队中",
+        "transcribing": "识别中",
+        "injecting": "注入中",
+        "done": "完成",
+        "failed": "失败"
+      },
+      "idleTitle": "等待设备按键",
+      "idleText": "启用语音后，按下设备 PTT 键会生成一个音频段并自动识别。也可用“模拟一次按键”体验流程。",
+      "recordingTitle": "正在接收音频",
+      "recordingText": "段 {seg} · 已收到 {blocks} 块 · 20 ms/块",
+      "finalizingText": "正在封段并检查缺块…",
+      "transcribingText": "本地 ASR 正在识别，通常 1–2 秒。",
+      "injectingText": "正在写入前台窗口…",
+      "failedTitle": "识别失败",
+      "resultTitle": "识别结果",
+      "latency": "ASR 延迟",
+      "audioDuration": "音频时长",
+      "language": "语言",
+      "segments": "累计段数",
+      "queue": "识别队列",
+      "elapsed": "已用时",
+      "wavSaved": "WAV 已保存：{path}",
+      "failureRetained": "原始音频已保留，可重试或复制路径。"
+    },
+    "inject": {
+      "title": "注入结果",
+      "sendinput": "已注入（SendInput）",
+      "clipboard": "已复制到剪贴板",
+      "blocked": "注入被拦截（UIPI）",
+      "none": "仅识别，未注入",
+      "uipiHint": "目标窗口以管理员权限运行。请以管理员身份启动上位机，或改用剪贴板方式。",
+      "focusHint": "焦点变化会中止注入；结果仍保留在结果区，可手动复制。"
+    },
+    "playback": {
+      "title": "接收与播放",
+      "receive": "接收音频段",
+      "playback": "实时播放",
+      "buffer": "播放缓冲",
+      "saveDir": "保存目录",
+      "wav": "最近一段 WAV",
+      "missing": "缺少 {count} 块，已以静音补齐"
+    },
+    "stats": {
+      "title": "语音统计",
+      "segments": "段数",
+      "interrupted": "丢弃段",
+      "failures": "失败",
+      "queue": "队列"
+    }
+  },
+  "keys": {
+    "title": "键位配置",
+    "subtitle": "选键 → 配属性 → 按一次「配置」。设备宏在设备侧执行，上位机只处理非键盘动作。",
+    "legend": {
+      "deviceMacro": "设备宏",
+      "host": "上位机",
+      "unconfigured": "未配置",
+      "conflict": "冲突"
+    },
+    "stage": {
+      "title": "键位舞台",
+      "renderer": "渲染器",
+      "auto": "自动",
+      "3d": "3D",
+      "2d": "2D",
+      "switched": "已切换为 2D 视图",
+      "loading": "正在加载 3D 舞台…",
+      "hint": "点击键帽选择；方向键移动，Esc 取消。",
+      "resetView": "重置视角",
+      "silkscreenPending": "丝印待确认，暂显示 K0–K15"
+    },
+    "panel": {
+      "emptyTitle": "从左侧选择一个按键",
+      "emptyText": "选择键帽后可配置路由、宏或上位机动作。",
+      "headerTarget": {
+        "device": "设备",
+        "host": "本机",
+        "both": "设备 + 本机"
+      },
+      "route": {
+        "title": "路由",
+        "devicePassthrough": "设备直通",
+        "devicePassthroughDesc": "设备直接发送 HID，不经过上位机。",
+        "deviceMacro": "设备宏",
+        "deviceMacroDesc": "宏保存在设备，按键时由设备执行。",
+        "host": "上位机接管",
+        "hostDesc": "设备只上报按键，由上位机执行动作。",
+        "managedHint": "被接管的键不会同时发送 HID，避免多打出字符。"
+      },
+      "content": {
+        "title": "内容"
+      },
+      "passthrough": {
+        "title": "输出键",
+        "outputKey": "按键",
+        "pressKey": "按下要设置的键",
+        "capture": "重新捕获",
+        "capturing": "请按下目标键…",
+        "modifier": "修饰键",
+        "usage": "Usage",
+        "hint": "P2f 接入后会从真实按键捕获 usage/modifier。"
+      },
+      "macro": {
+        "title": "设备宏",
+        "parallel": "并行",
+        "sequential": "串行",
+        "stepKeys": "按键",
+        "stepKeysPlaceholder": "例如 Ctrl+C",
+        "pressKey": "按下按键",
+        "captureHint": "点击后直接按键盘录制，支持组合键",
+        "recordSequence": "录制宏",
+        "hold": "按住",
+        "delay": "延时",
+        "addStep": "添加步骤",
+        "addDelay": "添加延时",
+        "removeStep": "删除步骤",
+        "total": "合计",
+        "bytes": "编码后 {bytes} / 200 B",
+        "overLimit": "宏超过 200 B，无法下发。",
+        "preview": "时间轴预览",
+        "delayStep": "延时 {ms} ms",
+        "keysStep": "{keys} · 按住 {hold} ms",
+        "empty": "还没有步骤。添加按键或延时。"
+      },
+      "action": {
+        "title": "上位机动作",
+        "kind": "动作类型",
+        "launch": "启动应用",
+        "openPath": "打开路径",
+        "openUrl": "打开 URL",
+        "script": "执行脚本",
+        "target": "目标",
+        "targetPlaceholder": "C:\\Program Files\\App\\app.exe",
+        "args": "参数",
+        "shell": "脚本引擎",
+        "timeout": "超时",
+        "dropzone": "拖入 .exe / .lnk / .bat / .ps1 / 文件 / 文件夹",
+        "dropzoneHint": "拖入后只解析，确认后才绑定。P1 不上传、不执行。",
+        "browse": "浏览…",
+        "pathMissing": "路径不存在或不可访问。",
+        "targetRequired": "请填写目标路径。",
+        "confirmImport": "导入为动作"
+      },
+      "trigger": {
+        "title": "触发方式",
+        "tap": "单击",
+        "double": "双击",
+        "long": "长按",
+        "repeat": "按住重复",
+        "hint": "触发方式只影响上位机动作的执行时机；设备宏内部自带时序。",
+        "deviceOnly": "设备路由固定单击，触发方式仅在“上位机接管”时可用。"
+      },
+      "hints": {
+        "title": "提示",
+        "conflictHostMacro": "该键仍保留设备宏步骤，但路由已改为上位机。请清空宏或改回设备宏。",
+        "offline": "设备离线：本次只会保存到本机，连接恢复后提示下发。",
+        "overLimit": "宏编码超过 200 B，无法下发。",
+        "unsaved": "{key} 有 {count} 项未保存修改。",
+        "unsavedAll": "切换按键不会丢失草稿；可以逐个配置后再统一写入。",
+        "readOnly": "演示模式下只读。"
+      },
+      "footer": {
+        "test": "测试",
+        "apply": "配置",
+        "saving": "正在写入…",
+        "offlineApply": "仅保存本机",
+        "target": "将写入：{target}",
+        "offline": "设备离线",
+        "dirty": "{count} 项未保存",
+        "clean": "与已保存配置一致",
+        "appliedAt": "设备已生效 · {time}",
+        "savedAt": "本机已保存 · {time}",
+        "pending": "有 {count} 项配置待下发"
+      }
+    },
+    "capture": {
+      "eyebrow": "KEY CAPTURE",
+      "titleSingle": "绑定按键",
+      "titleSequence": "录制宏",
+      "hintSingle": "直接按下目标键；同时按住 Ctrl / Shift / Alt / Win 可录制组合键。Esc 取消。",
+      "hintSequence": "依次按下要录制的按键，每一步会自动生成一条宏步骤；也可按住修饰键组成组合键。",
+      "press": "等待按键…",
+      "waiting": "按键后显示 usage / modifier",
+      "modifiers": "当前修饰键",
+      "none": "无",
+      "unsupported": "该键暂不支持；请使用字母、数字、功能键、方向键或常用符号。",
+      "recorded": "已录制步骤",
+      "steps": "{count} 步",
+      "noSteps": "还没有录制任何按键。",
+      "undo": "撤销上一步",
+      "esc": "Esc 取消",
+      "done": "完成"
+    },
+    "toast": {
+      "appliedTitle": "已配置并生效",      "appliedText": "{key} 已写入{target}，双读回比对一致。",
+      "savedLocalTitle": "已保存到本机",
+      "savedLocalText": "设备离线，连接恢复后请确认下发。",
+      "testTitle": "测试完成",
+      "testText": "已执行 {key} 的测试动作（Mock，未连接设备）。",
+      "discarded": "已放弃未保存修改。"
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "subtitle": "P1 中设置写入本机 Mock 配置；P2a 起由 Rust `settings.get/set` 持有。",
+    "ui": {
+      "title": "界面",
+      "language": "语言",
+      "languageHint": "切换立即生效，不重启；默认中文。",
+      "languageNameZh": "中文",
+      "languageNameEn": "English",
+      "renderer": "键位渲染器",
+      "rendererAuto": "自动（优先 3D）",
+      "renderer3d": "强制 3D",
+      "renderer2d": "强制 2D",
+      "rendererHint": "E2E 与截图固定使用 2D；3D 作为增强。"
+    },
+    "link": {
+      "title": "链路默认值",
+      "transport": "默认传输",
+      "autoReconnect": "断线自动重连",
+      "autoReconnectHint": "退避 2 s → 30 s；手动断开不会自动重连。"
+    },
+    "logging": {
+      "title": "日志",
+      "level": "最低等级",
+      "maxEntries": "内存上限",
+      "maxEntriesHint": "日志环形缓冲上限；超出时丢弃最旧并计数。"
+    },
+    "audio": {
+      "title": "音频与语音",
+      "saveDir": "段保存目录",
+      "receive": "默认接收音频段",
+      "playback": "默认实时播放",
+      "buffer": "播放缓冲"
+    },
+    "asr": {
+      "title": "本地识别",
+      "modelPath": "模型路径",
+      "modelMissing": "模型缺失",
+      "modelReady": "已就绪",
+      "device": "设备",
+      "compute": "计算类型",
+      "language": "识别语言",
+      "download": "下载模型",
+      "downloadUnavailable": "P1 不实现下载，P2c 补 sha256 校验与进度。"
+    },
+    "about": {
+      "title": "关于",
+      "version": "应用版本",
+      "platform": "平台",
+      "docs": "接口文档",
+      "mockNotice": "当前为 P1 Mock 原型：不连接串口、BLE、麦克风或剪贴板，所有数据来自本地模拟。"
+    },
+    "save": "保存设置",
+    "saved": "设置已保存",
+    "dirty": "有未保存修改",
+    "clean": "已保存",
+    "reset": "恢复默认设置",
+    "resetConfirm": "将恢复所有设置与语言为默认值，并写入本机 Mock 配置。已生效的键位配置不受影响。",
+    "resetDone": "已恢复默认设置",
+    "corrupt": {
+      "title": "配置文件损坏",
+      "text": "已加载默认值，并将原文件备份为 {ts}。",
+      "restore": "使用默认值"
+    }
+  },
+  "errors": {
+    "E_PORT_BUSY": "串口被占用",
+    "E_PORT_NOT_FOUND": "未找到串口",
+    "E_NOT_CONNECTED": "链路未连接",
+    "E_NOT_IMPLEMENTED": "该功能尚未开放",
+    "E_BLE_DEVICE_NOT_FOUND": "未发现设备",
+    "E_BLE_CONNECT_TIMEOUT": "连接超时",
+    "E_ASR_TIMEOUT": "识别超时",
+    "E_ASR_FAILED": "识别失败",
+    "E_ASR_MODEL_MISSING": "模型缺失",
+    "E_CFG_TOO_LARGE": "配置过大",
+    "E_INJECT_UIPI": "注入被 UIPI 拦截",
+    "E_INJECT_NO_FOCUS": "没有前台窗口",
+    "E_DEVICE_OFFLINE": "设备离线",
+    "E_CONFIG_CORRUPT": "配置损坏",
+    "E_WRITE_FAILED": "写入失败"
+  },
+  "mock": {
+    "log": {
+      "appStart": "应用启动，加载配置 schema v{schema}",
+      "appReady": "界面就绪，等待建立链路",
+      "mockMode": "P1 Mock 模式：未访问串口、BLE、麦克风或剪贴板",
+      "linkConnecting": "正在连接 {kind} · {address}",
+      "linkUp": "链路已建立：{kind} · {address} · MTU {mtu}",
+      "linkDown": "链路断开：{reason}",
+      "linkError": "连接失败：{code}（{detail}）",
+      "frame": "帧 #{seq} type=0x{type} len={len}",
+      "stats": "统计 tick：{fps} fps · {kbps} KB/s · 丢帧 {lost}",
+      "crc": "CRC 校验失败，已重同步（累计 {count}）",
+      "voiceSeg": "封段 seg={seg}，音频 {ms} ms，入队等待识别",
+      "asrDone": "识别完成 seg={seg}，延迟 {ms} ms，注入 {mode}",
+      "cfgApplied": "配置已提交：{key} → {target}，双读回一致",
+      "warnQueue": "帧队列水位 {percent}%，开始背压丢弃",
+      "debugParser": "解析器缓冲 {size} B，等待下一帧",
+      "traceByte": "原始字节 {hex}…",
+      "echo": "回环校验 type=0x60 seq={seq}",
+      "recStart": "开始记录 CSV：{path}",
+      "voiceFail": "识别失败 seg={seg}：{code}",
+      "injectBlocked": "注入被拦截：UIPI，目标窗口权限更高",
+      "deviceOffline": "设备心跳超时（5 s），按策略回退直通"
+    },
+    "kind": {
+      "serial": "串口",
+      "ble": "BLE",
+      "sim": "模拟"
+    },
+    "reason": {
+      "user": "用户断开",
+      "timeout": "心跳超时",
+      "removed": "设备移除",
+      "simulated": "模拟断连"
+    },
+    "asr": {
+      "text": "这是一段来自设备按键的本地识别结果。",
+      "textEn": "This is a local transcription from a device key press."
+    },
+    "serialPort": {
+      "com3": "COM3 · USB 串行设备",
+      "com4": "COM4 · USB 串行设备",
+      "com5": "COM5 · 蓝牙串行端口"
+    },
+    "usbDevice": {
+      "dev1": "USB CDC · COM3",
+      "dev2": "USB CDC · COM4",
+      "dev3": "USB CDC · COM5"
+    }
+  },
+  "actions": {
+    "placeholderTitle": "动作与脚本",
+    "placeholderText": "动作编辑、拖拽导入与脚本执行在 P2f 随设备配置协议一起交付。",
+    "back": "返回连接"
+  },
+  "ai": {
+    "placeholderTitle": "AI 工具",
+    "placeholderText": "AI Provider、工具调用与密钥存储属于 P5；当前仅保留导航占位。",
+    "back": "返回连接"
+  },
+  "units": {
+    "ms": "ms",
+    "s": "s",
+    "hz": "Hz",
+    "bytes": "B",
+    "percent": "%"
+  }
+}

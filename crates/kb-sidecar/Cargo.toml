@@ -1,0 +1,9 @@
+[package]
+name = "kb-sidecar"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "JnWorkerStream Python sidecar supervision + framed stdio protocol (P2c)"
+
+[dependencies]
+serde_json = "1"

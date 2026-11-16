@@ -1,0 +1,9 @@
+[package]
+name = "kb-audio"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "JnWorkerStream ADPCM/WAV/PTT segment core (P2a)"
+
+[dependencies]
+kb-protocol = { path = "../kb-protocol" }

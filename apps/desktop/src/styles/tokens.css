@@ -1,0 +1,105 @@
+/* JnWorkerStream design tokens — single source of truth (docs/design-system.md §2–4, §10).
+   Components MUST reference these variables; never inline a colour. */
+:root {
+  color-scheme: light;
+
+  /* Surface */
+  --jn-color-canvas: #eeefe9;
+  --jn-color-surface-card: #ffffff;
+  --jn-color-surface-doc: #fcfcfa;
+  --jn-color-surface-soft: #e5e7e0;
+  --jn-color-surface-dark: #23251d;
+  --jn-color-surface-dark-raised: #2d2f26;
+
+  /* Text */
+  --jn-color-ink: #23251d;
+  --jn-color-body: #4d4f46;
+  --jn-color-charcoal: #33342d;
+  --jn-color-mute: #6c6e63;
+  --jn-color-ash: #9b9c92;
+  --jn-color-stone: #b6b7af;
+  --jn-color-on-dark: #f4f4ef;
+  --jn-color-on-dark-mute: #a9ab9e;
+
+  /* Lines */
+  --jn-color-hairline: #bfc1b7;
+  --jn-color-hairline-soft: #dcdfd2;
+
+  /* Primary */
+  --jn-color-primary: #f7a501;
+  --jn-color-primary-pressed: #dd9001;
+  --jn-color-primary-active: #b17816;
+  --jn-color-primary-soft: #fdf0d2;
+  --jn-color-on-primary: #23251d;
+
+  /* Semantic */
+  --jn-color-success: #2c8c66;
+  --jn-color-success-soft: #d9eddf;
+  --jn-color-danger: #cd4239;
+  --jn-color-danger-soft: #f7d6d3;
+  --jn-color-info: #2c84e0;
+  --jn-color-info-soft: #dceaf6;
+  --jn-color-voice: #7c44a6;
+  --jn-color-voice-soft: #e7d8ee;
+  --jn-color-warning: #b17816;
+  --jn-color-warning-soft: #f6e8cd;
+  --jn-color-link: #1078a3;
+  --jn-color-focus-ring: rgba(59, 130, 246, 0.5);
+
+  /* Typography */
+  --jn-font-ui: "IBM Plex Sans", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+  --jn-font-mono: "Source Code Pro", "Cascadia Mono", "Sarasa Mono SC", ui-monospace, monospace;
+
+  --jn-font-title: 700 20px/1.4 var(--jn-font-ui);
+  --jn-font-section: 700 16px/1.5 var(--jn-font-ui);
+  --jn-font-subtitle: 600 14px/1.5 var(--jn-font-ui);
+  --jn-font-body: 400 14px/1.6 var(--jn-font-ui);
+  --jn-font-body-strong: 600 14px/1.6 var(--jn-font-ui);
+  --jn-font-caption: 500 12px/1.5 var(--jn-font-ui);
+  --jn-font-eyebrow: 700 11px/1.33 var(--jn-font-ui);
+  --jn-font-metric: 700 24px/1.2 var(--jn-font-ui);
+  --jn-font-metric-unit: 500 12px/1.5 var(--jn-font-ui);
+  --jn-font-code: 400 12.5px/1.65 var(--jn-font-mono);
+  --jn-font-code-strong: 600 12.5px/1.65 var(--jn-font-mono);
+
+  /* Spacing */
+  --jn-space-1: 4px;
+  --jn-space-2: 8px;
+  --jn-space-3: 12px;
+  --jn-space-4: 16px;
+  --jn-space-5: 24px;
+  --jn-space-6: 32px;
+
+  /* Radius */
+  --jn-radius-xs: 2px;
+  --jn-radius-sm: 4px;
+  --jn-radius-md: 6px;
+  --jn-radius-full: 9999px;
+
+  /* Elevation (dialog only) */
+  --jn-shadow-dialog: 0 8px 24px rgba(35, 37, 29, 0.12);
+
+  /* Layout */
+  --jn-topbar-h: 56px;
+  --jn-statusbar-h: 28px;
+  --jn-sidebar-w: 300px;
+  --jn-panel-w: 440px;
+  --jn-content-max: none;
+
+  /* Motion */
+  --jn-ease: cubic-bezier(0.2, 0, 0, 1);
+  --jn-duration: 140ms;
+
+  /* Z-index */
+  --jn-z-label: 2;
+  --jn-z-sticky: 10;
+  --jn-z-toast: 40;
+  --jn-z-dialog: 50;
+}
+
+@media (max-width: 1400px) {
+  :root {
+    --jn-sidebar-w: 260px;
+    --jn-panel-w: 400px;
+  }
+}

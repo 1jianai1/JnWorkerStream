@@ -1,0 +1,14 @@
+[package]
+name = "kb-transport"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "JnWorkerStream transport layer: USB CDC (Windows) + link stats (P2a)"
+
+[dependencies]
+kb-protocol = { path = "../kb-protocol" }
+kb-sidecar = { path = "../kb-sidecar" }
+serde_json = "1"
+
+[dev-dependencies]
+kb-audio = { path = "../kb-audio" }

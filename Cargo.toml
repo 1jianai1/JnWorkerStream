@@ -1,0 +1,25 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/kb-app",
+    "crates/kb-audio",
+    "crates/kb-check",
+    "crates/kb-config",
+    "crates/kb-inject",
+    "crates/kb-protocol",
+    "crates/kb-sidecar",
+    "crates/kb-transport",
+    "crates/kb-voice",
+    "src-tauri",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

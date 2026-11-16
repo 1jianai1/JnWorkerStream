@@ -1,0 +1,635 @@
+{
+  "app": {
+    "name": "JnWorkerStream",
+    "subtitle": "Desktop Console",
+    "version": "Version {version}",
+    "p1": "P1 Mock"
+  },
+  "layout": {
+    "resizeSidebar": "Resize sidebar (drag / arrow keys, double-click to reset)",
+    "resizeLinkControl": "Resize link control (drag / arrow keys, double-click to reset)",
+    "resizeLogDetail": "Resize log details (drag / arrow keys, double-click to reset)",
+    "resizeAudioSide": "Resize audio side panel (drag / arrow keys, double-click to reset)",
+    "resizeKeyPanel": "Resize property panel (drag / arrow keys, double-click to reset)"
+  },
+  "nav": {
+    "section": {
+      "run": "Operate",
+      "config": "Configure",
+      "later": "Later stages"
+    },
+    "link": "Connection",
+    "logs": "Logs",
+    "audio": "Audio & Voice",
+    "keys": "Key Mapping",
+    "settings": "Settings",
+    "actions": "Actions & Scripts",
+    "ai": "AI Tools",
+    "laterBadge": "P2f",
+    "laterBadgeAi": "P5"
+  },
+  "topbar": {
+    "language": "Interface language",
+    "localeZh": "中",
+    "localeEn": "EN",
+    "mock": "Demo data",
+    "deviceOnline": "Device online",
+    "deviceOffline": "Device offline"
+  },
+  "common": {
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied",
+    "export": "Export",
+    "pause": "Pause",
+    "resume": "Resume",
+    "clear": "Clear",
+    "reset": "Reset to defaults",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "apply": "Apply",
+    "refresh": "Refresh",
+    "search": "Search",
+    "all": "All",
+    "none": "None",
+    "loading": "Loading…",
+    "unknown": "Unknown",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "on": "On",
+    "off": "Off",
+    "yes": "Yes",
+    "no": "No",
+    "seconds": "seconds",
+    "milliseconds": "milliseconds",
+    "rows": "rows",
+    "items": "items",
+    "remove": "Remove",
+    "add": "Add",
+    "edit": "Edit",
+    "test": "Test",
+    "confirm": "Confirm",
+    "discard": "Discard changes",
+    "dismiss": "Dismiss",
+    "details": "Details",
+    "noData": "No data",
+    "notAvailable": "—",
+    "unsupported": "Not available",
+    "demoData": "Demo data — no real hardware attached",
+    "durationHms": "{h} h {m} min {s} s",
+    "durationMs": "{m} min {s} s",
+    "windowTooSmall": {
+      "title": "Window too small",
+      "text": "Resize the window to at least 900 × 600; below that some secondary information is hidden."
+    },
+    "scrollMore": "Scroll for more"
+  },
+  "status": {
+    "link": {
+      "disconnected": "Disconnected",
+      "connecting": "Connecting",
+      "connected": "Connected",
+      "reconnecting": "Reconnecting",
+      "error": "Error"
+    },
+    "config": {
+      "applied": "Applied to device",
+      "pending": "Pending push",
+      "failed": "Push failed",
+      "local": "Local only"
+    },
+    "queue": "Queue",
+    "dropped": "Dropped",
+    "reconnects": "Reconnects",
+    "rx": "RX",
+    "tx": "TX"
+  },
+  "link": {
+    "title": "Connection",
+    "subtitle": "Choose a transport, establish a link, and watch live statistics. P1 uses simulated data and never touches hardware.",
+    "control": {
+      "title": "Link control",
+      "transport": "Transport",
+      "serial": "Serial",
+      "ble": "BLE",
+      "sim": "Simulator",
+      "usb": "USB CDC",
+      "usbDevice": "USB device",
+      "usb": "USB CDC",
+      "network": "TCP/UDP",
+      "g24": "2.4G",
+      "port": "Port",
+      "device": "Device",
+      "deviceName": "Device name",
+      "pairedOnly": "Paired only",
+      "autoReconnect": "Auto-reconnect on link loss",
+      "rate": "Rate",
+      "size": "Payload",
+      "pattern": "Pattern",
+      "connect": "Connect",
+      "disconnect": "Disconnect",
+      "simulateLoss": "Simulate link loss",
+      "connecting": "Connecting…",
+      "hintDisconnected": "Pick a transport and connect. The simulator is useful for validating the UI and statistics.",
+      "hintUsb": "USB CDC connects through device enumeration; P1 only demonstrates state and statistics and never opens a real port.",
+      "hintBle": "BLE arrives in P2c; P1 only demonstrates states and parameters.",
+      "hintSim": "The simulator generates increasing payloads at 20 Hz for regression and screenshots."
+    },
+    "banner": {
+      "errorTitle": "Connection failed",
+      "errorDetail": "{code} · {detail}",
+      "nextStep": "Check whether the port is busy, then close the program holding it and retry.",
+      "reconnectingTitle": "Link lost — reconnecting automatically",
+      "reconnectingText": "Attempt {attempt}; next try in about {seconds} seconds.",
+      "retryNow": "Retry now",
+      "stop": "Stop reconnecting"
+    },
+    "detail": {
+      "title": "Link details",
+      "state": "State",
+      "kind": "Transport",
+      "address": "Address",
+      "port": "Port",
+      "usbDevice": "USB device",
+      "mtu": "MTU",
+      "maxPayload": "Max payload",
+      "uptime": "Uptime",
+      "baud": "Baud rate",
+      "opened": "Opened at",
+      "empty": "No link established yet"
+    },
+    "stats": {
+      "frames": "Frames",
+      "framesNote": "Parsed successfully",
+      "bytes": "Bytes received",
+      "bytesNote": "Includes header and CRC",
+      "crc": "CRC errors",
+      "crcNote": "Parser resynchronises",
+      "throughput": "Throughput",
+      "throughputNote": "Last second",
+      "lost": "Lost frames",
+      "lostNote": "Counted by sequence gaps",
+      "jitter": "Jitter",
+      "jitterNote": "Population standard deviation",
+      "rate": "Frame rate",
+      "rateNote": "Last second",
+      "queue": "Queue level",
+      "queueNote": "Warns above 80%",
+      "dropped": "Dropped events",
+      "droppedNote": "Oldest dropped under backpressure"
+    },
+    "recent": {
+      "title": "Recent events",
+      "empty": "No events yet. Recent logs appear here after connecting.",
+      "viewAll": "View all logs"
+    },
+    "capacity": {
+      "title": "Capacity and backpressure",
+      "queue": "Frame queue",
+      "logs": "Log buffer",
+      "hint": "When full, the oldest data is dropped and counted; link state does not change."
+    }
+  },
+  "logs": {
+    "title": "Logs",
+    "subtitle": "Filter by level, source, and keyword. Long logs use virtual scrolling; pausing only freezes rendering.",
+    "toolbar": {
+      "searchPlaceholder": "Search message, domain, or key value…",
+      "level": "Level",
+      "domain": "Source",
+      "regex": "Regex",
+      "pause": "Pause",
+      "resume": "Resume",
+      "clear": "Clear",
+      "export": "Export",
+      "autoScroll": "Auto-scroll",
+      "count": "{count} lines",
+      "shown": "Showing {shown} / {total} lines",
+      "shownShort": "{shown} / {total}",
+      "paused": "Rendering paused",
+      "focusHint": "Ctrl+F focuses search"
+    },
+    "empty": {
+      "title": "No logs yet",
+      "text": "Logs appear here after a link is established or an operation runs.",
+      "filteredTitle": "No matching logs",
+      "filteredText": "Adjust the level, source, or keyword and try again.",
+      "clearFilters": "Clear filters"
+    },
+    "autoScroll": {
+      "paused": "Auto-scroll paused",
+      "resume": "Back to bottom"
+    },
+    "detail": {
+      "title": "Log details",
+      "empty": "Select a log entry to inspect it.",
+      "time": "Time",
+      "level": "Level",
+      "domain": "Source",
+      "message": "Message",
+      "data": "Data",
+      "raw": "Raw record",
+      "copy": "Copy details"
+    },
+    "export": {
+      "doneTitle": "Export complete",
+      "doneText": "Exported {rows} rows ({bytes}).",
+      "empty": "The current filter is empty; nothing was exported."
+    },
+    "level": {
+      "trace": "TRACE",
+      "debug": "DEBUG",
+      "info": "INFO",
+      "warn": "WARN",
+      "error": "ERROR"
+    },
+    "domain": {
+      "link": "LINK",
+      "frame": "FRAME",
+      "data": "DATA",
+      "voice": "VOICE",
+      "stat": "STAT",
+      "echo": "ECHO",
+      "rec": "REC",
+      "app": "APP",
+      "key": "KEY"
+    }
+  },
+  "audio": {
+    "title": "Audio & Voice",
+    "subtitle": "End-to-end PTT segmentation, local recognition, and text injection. P1 demonstrates every state with mocks.",
+    "voice": {
+      "title": "Voice pipeline",
+      "eyebrow": "VOICE / ASR",
+      "enable": "Enable voice",
+      "disable": "Disable voice",
+      "simulatePtt": "Simulate key press",
+      "cancel": "Cancel recognition",
+      "retry": "Retry recognition",
+      "copyText": "Copy text",
+      "copyPath": "Copy WAV path",
+      "injectMode": "Injection mode",
+      "injectAuto": "Auto",
+      "injectSendinput": "SendInput",
+      "injectClipboard": "Clipboard",
+      "injectRecognizeOnly": "Recognise only",
+      "state": {
+        "idle": "Idle",
+        "recording": "Recording",
+        "finalizing": "Finalising",
+        "queued": "Queued",
+        "transcribing": "Transcribing",
+        "injecting": "Injecting",
+        "done": "Done",
+        "failed": "Failed"
+      },
+      "idleTitle": "Waiting for a device key",
+      "idleText": "Once voice is enabled, pressing the device PTT key creates an audio segment and recognises it automatically. You can also try “Simulate key press”.",
+      "recordingTitle": "Receiving audio",
+      "recordingText": "Segment {seg} · {blocks} blocks received · 20 ms/block",
+      "finalizingText": "Finalising the segment and checking for missing blocks…",
+      "transcribingText": "Local ASR is transcribing; usually 1–2 seconds.",
+      "injectingText": "Writing into the foreground window…",
+      "failedTitle": "Recognition failed",
+      "resultTitle": "Recognition result",
+      "latency": "ASR latency",
+      "audioDuration": "Audio duration",
+      "language": "Language",
+      "segments": "Segments",
+      "queue": "ASR queue",
+      "elapsed": "Elapsed",
+      "wavSaved": "WAV saved: {path}",
+      "failureRetained": "The source audio is kept; retry or copy the path."
+    },
+    "inject": {
+      "title": "Injection result",
+      "sendinput": "Injected (SendInput)",
+      "clipboard": "Copied to clipboard",
+      "blocked": "Injection blocked (UIPI)",
+      "none": "Recognised only — not injected",
+      "uipiHint": "The target window runs elevated. Start this console as administrator, or switch to clipboard mode.",
+      "focusHint": "A focus change aborts injection; the result stays here so you can copy it manually."
+    },
+    "playback": {
+      "title": "Capture and playback",
+      "receive": "Receive audio segments",
+      "playback": "Live playback",
+      "buffer": "Playback buffer",
+      "saveDir": "Save directory",
+      "wav": "Latest WAV",
+      "missing": "{count} blocks missing; padded with silence"
+    },
+    "stats": {
+      "title": "Voice stats",
+      "segments": "Segments",
+      "interrupted": "Discarded",
+      "failures": "Failures",
+      "queue": "Queue"
+    }
+  },
+  "keys": {
+    "title": "Key Mapping",
+    "subtitle": "Select a key, configure its behaviour, then press Apply once. Device macros run on the device; the host only handles non-keyboard actions.",
+    "legend": {
+      "deviceMacro": "Device macro",
+      "host": "Host",
+      "unconfigured": "Unconfigured",
+      "conflict": "Conflict"
+    },
+    "stage": {
+      "title": "Keypad stage",
+      "renderer": "Renderer",
+      "auto": "Auto",
+      "3d": "3D",
+      "2d": "2D",
+      "switched": "Switched to 2D view",
+      "loading": "Loading 3D stage…",
+      "hint": "Click a key cap to select; arrow keys move, Esc clears.",
+      "resetView": "Reset view",
+      "silkscreenPending": "Silkscreen pending; showing K0–K15"
+    },
+    "panel": {
+      "emptyTitle": "Select a key on the left",
+      "emptyText": "Choose a key cap to configure routing, macros, or host actions.",
+      "headerTarget": {
+        "device": "Device",
+        "host": "Host",
+        "both": "Device + host"
+      },
+      "route": {
+        "title": "Routing",
+        "devicePassthrough": "Device passthrough",
+        "devicePassthroughDesc": "The device sends HID directly; the host is not involved.",
+        "deviceMacro": "Device macro",
+        "deviceMacroDesc": "The macro lives on the device and runs there on key press.",
+        "host": "Host takeover",
+        "hostDesc": "The device only reports the key; the host runs the action.",
+        "managedHint": "A managed key never sends HID at the same time, preventing duplicate characters."
+      },
+      "content": {
+        "title": "Content"
+      },
+      "passthrough": {
+        "title": "Output key",
+        "outputKey": "Key",
+        "pressKey": "Press a key to bind",
+        "capture": "Capture again",
+        "capturing": "Press the target key…",
+        "modifier": "Modifier",
+        "usage": "Usage",
+        "hint": "P2f will capture usage/modifier from a real key press."
+      },
+      "macro": {
+        "title": "Device macro",
+        "parallel": "Parallel",
+        "sequential": "Sequential",
+        "stepKeys": "Keys",
+        "stepKeysPlaceholder": "e.g. Ctrl+C",
+        "pressKey": "Press a key",
+        "captureHint": "Click, then press keys on the keyboard; combinations are supported",
+        "recordSequence": "Record macro",
+        "hold": "Hold",
+        "delay": "Delay",
+        "addStep": "Add step",
+        "addDelay": "Add delay",
+        "removeStep": "Remove step",
+        "total": "Total",
+        "bytes": "Encoded {bytes} / 200 B",
+        "overLimit": "The macro exceeds 200 B and cannot be pushed.",
+        "preview": "Timeline preview",
+        "delayStep": "Delay {ms} ms",
+        "keysStep": "{keys} · hold {hold} ms",
+        "empty": "No steps yet. Add a key or a delay."
+      },
+      "action": {
+        "title": "Host action",
+        "kind": "Action type",
+        "launch": "Launch application",
+        "openPath": "Open path",
+        "openUrl": "Open URL",
+        "script": "Run script",
+        "target": "Target",
+        "targetPlaceholder": "C:\\Program Files\\App\\app.exe",
+        "args": "Arguments",
+        "shell": "Shell",
+        "timeout": "Timeout",
+        "dropzone": "Drop .exe / .lnk / .bat / .ps1 / file / folder",
+        "dropzoneHint": "Dropping only parses; binding requires confirmation. P1 never uploads or executes.",
+        "browse": "Browse…",
+        "pathMissing": "The path does not exist or is not accessible.",
+        "targetRequired": "Enter a target path.",
+        "confirmImport": "Import as action"
+      },
+      "trigger": {
+        "title": "Trigger",
+        "tap": "Tap",
+        "double": "Double-tap",
+        "long": "Long press",
+        "repeat": "Hold to repeat",
+        "hint": "Triggers only affect when a host action runs; device macros carry their own timing.",
+        "deviceOnly": "Device routes always use a single tap; triggers apply only to host takeover."
+      },
+      "hints": {
+        "title": "Hints",
+        "conflictHostMacro": "This key still has device macro steps while routed to the host. Clear the macro or switch back.",
+        "offline": "Device offline: this save stays local and is offered for push when the link returns.",
+        "overLimit": "The encoded macro exceeds 200 B and cannot be pushed.",
+        "unsaved": "{key} has {count} unsaved changes.",
+        "unsavedAll": "Switching keys keeps drafts; configure several keys, then apply once.",
+        "readOnly": "Read-only in demo mode."
+      },
+      "footer": {
+        "test": "Test",
+        "apply": "Apply",
+        "saving": "Writing…",
+        "offlineApply": "Save locally",
+        "target": "Writes to: {target}",
+        "offline": "Device offline",
+        "dirty": "{count} unsaved",
+        "clean": "Matches the saved configuration",
+        "appliedAt": "Applied to device · {time}",
+        "savedAt": "Saved locally · {time}",
+        "pending": "{count} configuration(s) pending push"
+      }
+    },
+    "capture": {
+      "eyebrow": "KEY CAPTURE",
+      "titleSingle": "Bind a key",
+      "titleSequence": "Record macro",
+      "hintSingle": "Press the target key; hold Ctrl / Shift / Alt / Win for a combination. Esc cancels.",
+      "hintSequence": "Press the keys in order; each press becomes a macro step. Hold modifiers to record combinations.",
+      "press": "Waiting for input…",
+      "waiting": "usage / modifier appear after a key press",
+      "modifiers": "Held modifiers",
+      "none": "None",
+      "unsupported": "This key is not supported yet; use letters, digits, function keys, arrows, or common symbols.",
+      "recorded": "Recorded steps",
+      "steps": "{count} step(s)",
+      "noSteps": "No keys recorded yet.",
+      "undo": "Undo last",
+      "esc": "Esc cancels",
+      "done": "Done"
+    },
+    "toast": {
+      "appliedTitle": "Configured and applied",
+      "appliedText": "{key} was written to {target}; read-back matched.",
+      "savedLocalTitle": "Saved locally",
+      "savedLocalText": "The device is offline; confirm the push when the link returns.",
+      "testTitle": "Test complete",
+      "testText": "Ran the test action for {key} (mock, no device attached).",
+      "discarded": "Unsaved changes discarded."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "In P1 settings persist to the local mock config; from P2a Rust `settings.get/set` owns them.",
+    "ui": {
+      "title": "Interface",
+      "language": "Language",
+      "languageHint": "Switches instantly without restart; Chinese is the default.",
+      "languageNameZh": "Chinese",
+      "languageNameEn": "English",
+      "renderer": "Keypad renderer",
+      "rendererAuto": "Auto (prefer 3D)",
+      "renderer3d": "Force 3D",
+      "renderer2d": "Force 2D",
+      "rendererHint": "E2E and screenshots always use 2D; 3D is an enhancement."
+    },
+    "link": {
+      "title": "Link defaults",
+      "transport": "Default transport",
+      "autoReconnect": "Auto-reconnect on link loss",
+      "autoReconnectHint": "Backoff 2 s → 30 s; a manual disconnect never reconnects."
+    },
+    "logging": {
+      "title": "Logging",
+      "level": "Minimum level",
+      "maxEntries": "In-memory limit",
+      "maxEntriesHint": "Log ring-buffer limit; the oldest entries are dropped and counted."
+    },
+    "audio": {
+      "title": "Audio & voice",
+      "saveDir": "Segment directory",
+      "receive": "Receive audio segments by default",
+      "playback": "Live playback by default",
+      "buffer": "Playback buffer"
+    },
+    "asr": {
+      "title": "Local recognition",
+      "modelPath": "Model path",
+      "modelMissing": "Model missing",
+      "modelReady": "Ready",
+      "device": "Device",
+      "compute": "Compute type",
+      "language": "Recognition language",
+      "download": "Download model",
+      "downloadUnavailable": "P1 does not download; P2c adds sha256 verification and progress."
+    },
+    "about": {
+      "title": "About",
+      "version": "App version",
+      "platform": "Platform",
+      "docs": "Interface docs",
+      "mockNotice": "This is the P1 mock prototype: no serial port, BLE, microphone, or clipboard access. All data is simulated locally."
+    },
+    "save": "Save settings",
+    "saved": "Settings saved",
+    "dirty": "Unsaved changes",
+    "clean": "Saved",
+    "reset": "Reset to defaults",
+    "resetConfirm": "This restores every setting and the language to defaults and writes the local mock config. Applied key mappings are unaffected.",
+    "resetDone": "Defaults restored",
+    "corrupt": {
+      "title": "Configuration file corrupt",
+      "text": "Defaults loaded and the original file backed up as {ts}.",
+      "restore": "Use defaults"
+    }
+  },
+  "errors": {
+    "E_PORT_BUSY": "Serial port busy",
+    "E_PORT_NOT_FOUND": "Serial port not found",
+    "E_NOT_CONNECTED": "Link is not connected",
+    "E_NOT_IMPLEMENTED": "Not available yet",
+    "E_BLE_DEVICE_NOT_FOUND": "Device not found",
+    "E_BLE_CONNECT_TIMEOUT": "Connection timed out",
+    "E_ASR_TIMEOUT": "Recognition timed out",
+    "E_ASR_FAILED": "Recognition failed",
+    "E_ASR_MODEL_MISSING": "Model missing",
+    "E_CFG_TOO_LARGE": "Configuration too large",
+    "E_INJECT_UIPI": "Injection blocked by UIPI",
+    "E_INJECT_NO_FOCUS": "No foreground window",
+    "E_DEVICE_OFFLINE": "Device offline",
+    "E_CONFIG_CORRUPT": "Configuration corrupt",
+    "E_WRITE_FAILED": "Write failed"
+  },
+  "mock": {
+    "log": {
+      "appStart": "Application started; config schema v{schema} loaded",
+      "appReady": "UI ready; waiting for a link",
+      "mockMode": "P1 mock mode: serial, BLE, microphone, and clipboard are untouched",
+      "linkConnecting": "Connecting {kind} · {address}",
+      "linkUp": "Link established: {kind} · {address} · MTU {mtu}",
+      "linkDown": "Link down: {reason}",
+      "linkError": "Connection failed: {code} ({detail})",
+      "frame": "Frame #{seq} type=0x{type} len={len}",
+      "stats": "Stats tick: {fps} fps · {kbps} KB/s · lost {lost}",
+      "crc": "CRC mismatch; parser resynchronised (total {count})",
+      "voiceSeg": "Segment seg={seg} closed; audio {ms} ms queued for recognition",
+      "asrDone": "Recognition finished seg={seg} in {ms} ms; injected via {mode}",
+      "cfgApplied": "Configuration committed: {key} → {target}; read-back matched",
+      "warnQueue": "Frame queue at {percent}%; backpressure drops begin",
+      "debugParser": "Parser buffer {size} B; waiting for the next frame",
+      "traceByte": "Raw bytes {hex}…",
+      "echo": "Loopback check type=0x60 seq={seq}",
+      "recStart": "CSV recording started: {path}",
+      "voiceFail": "Recognition failed seg={seg}: {code}",
+      "injectBlocked": "Injection blocked by UIPI; target window is elevated",
+      "deviceOffline": "Device heartbeat timed out (5 s); falling back to passthrough"
+    },
+    "kind": {
+      "serial": "Serial",
+      "ble": "BLE",
+      "sim": "Simulator"
+    },
+    "reason": {
+      "user": "user disconnect",
+      "timeout": "heartbeat timeout",
+      "removed": "device removed",
+      "simulated": "simulated disconnect"
+    },
+    "asr": {
+      "text": "这是一段来自设备按键的本地识别结果。",
+      "textEn": "This is a local transcription from a device key press."
+    },
+    "serialPort": {
+      "com3": "COM3 · USB serial device",
+      "com4": "COM4 · USB serial device",
+      "com5": "COM5 · Bluetooth serial port"
+    },
+    "usbDevice": {
+      "dev1": "USB CDC · COM3",
+      "dev2": "USB CDC · COM4",
+      "dev3": "USB CDC · COM5"
+    }
+  },
+  "actions": {
+    "placeholderTitle": "Actions & Scripts",
+    "placeholderText": "Action editing, drag-and-drop import, and script execution ship in P2f together with the device configuration protocol.",
+    "back": "Back to connection"
+  },
+  "ai": {
+    "placeholderTitle": "AI Tools",
+    "placeholderText": "AI Provider, tool calling, and secret storage belong to P5; this navigation entry is only a placeholder.",
+    "back": "Back to connection"
+  },
+  "units": {
+    "ms": "ms",
+    "s": "s",
+    "hz": "Hz",
+    "bytes": "B",
+    "percent": "%"
+  }
+}

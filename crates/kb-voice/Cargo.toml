@@ -1,0 +1,16 @@
+[package]
+name = "kb-voice"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "JnWorkerStream voice pipeline: segment -> ASR sidecar -> text injection (P2c-2)"
+
+[dependencies]
+kb-audio = { path = "../kb-audio" }
+kb-inject = { path = "../kb-inject" }
+kb-sidecar = { path = "../kb-sidecar" }
+serde_json = "1"
+
+[dev-dependencies]
+kb-protocol = { path = "../kb-protocol" }
+kb-transport = { path = "../kb-transport" }

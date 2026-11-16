@@ -1,0 +1,28 @@
+# dependencies / build
+node_modules/
+dist/
+target/
+.tools/
+.cache/
+coverage/
+playwright-report/
+test-results/
+
+# python
+__pycache__/
+*.pyc
+
+skills
+docs
+# runtime artefacts (docs/interfaces.md §6)
+models/
+logs/
+*.wav
+*.csv
+*.pdb
+*.ilk
+*.log
+
+# local env
+.env
+.env.local

@@ -1,0 +1,23 @@
+[package]
+name = "jnworkerstream"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "JnWorkerStream desktop shell (P2c: thin adapter over kb-app)"
+
+[lib]
+name = "jnworkerstream_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+kb-app = { path = "../crates/kb-app" }
+kb-inject = { path = "../crates/kb-inject" }
+kb-sidecar = { path = "../crates/kb-sidecar" }
+kb-transport = { path = "../crates/kb-transport" }
+kb-voice = { path = "../crates/kb-voice" }

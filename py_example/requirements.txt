@@ -1,0 +1,12 @@
+# USB CDC 传输
+pyserial>=3.5
+
+# BLE GATT 传输（仅在 --transport ble 时需要）
+bleak>=0.22
+
+# 图形界面（仅在 --gui 时需要；PySide6-Essentials 已包含 QtWidgets）
+PySide6-Essentials>=6.6
+
+# 语音输入（可选，约 200 MB）：faster-whisper / ctranslate2 / onnxruntime 等
+# 见 requirements-voice.txt，按需单独安装：
+#   pip install -r py_example/requirements-voice.txt

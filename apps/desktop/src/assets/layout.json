@@ -1,0 +1,22 @@
+{
+  "model": "numpad-16",
+  "grid": { "rows": 4, "cols": 4 },
+  "keys": [
+    { "key_id": 0, "row": 0, "col": 0, "label_zh": "K0", "label_en": "K0", "size": 1.0 },
+    { "key_id": 1, "row": 0, "col": 1, "label_zh": "K1", "label_en": "K1", "size": 1.0 },
+    { "key_id": 2, "row": 0, "col": 2, "label_zh": "K2", "label_en": "K2", "size": 1.0 },
+    { "key_id": 3, "row": 0, "col": 3, "label_zh": "K3", "label_en": "K3", "size": 1.0 },
+    { "key_id": 4, "row": 1, "col": 0, "label_zh": "K4", "label_en": "K4", "size": 1.0 },
+    { "key_id": 5, "row": 1, "col": 1, "label_zh": "K5", "label_en": "K5", "size": 1.0 },
+    { "key_id": 6, "row": 1, "col": 2, "label_zh": "K6", "label_en": "K6", "size": 1.0 },
+    { "key_id": 7, "row": 1, "col": 3, "label_zh": "K7", "label_en": "K7", "size": 1.0 },
+    { "key_id": 8, "row": 2, "col": 0, "label_zh": "K8", "label_en": "K8", "size": 1.0 },
+    { "key_id": 9, "row": 2, "col": 1, "label_zh": "K9", "label_en": "K9", "size": 1.0 },
+    { "key_id": 10, "row": 2, "col": 2, "label_zh": "K10", "label_en": "K10", "size": 1.0 },
+    { "key_id": 11, "row": 2, "col": 3, "label_zh": "K11", "label_en": "K11", "size": 1.0 },
+    { "key_id": 12, "row": 3, "col": 0, "label_zh": "K12", "label_en": "K12", "size": 1.0 },
+    { "key_id": 13, "row": 3, "col": 1, "label_zh": "K13", "label_en": "K13", "size": 1.0 },
+    { "key_id": 14, "row": 3, "col": 2, "label_zh": "K14", "label_en": "K14", "size": 1.0 },
+    { "key_id": 15, "row": 3, "col": 3, "label_zh": "K15", "label_en": "K15", "size": 1.0 }
+  ]
+}

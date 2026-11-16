@@ -1,0 +1,17 @@
+# 语音输入（可选）依赖
+#
+# 只在主机侧跑语音功能时需要；固件不受影响。
+# 安装：
+#   conda activate kbhost
+#   pip install -r py_example/requirements-voice.txt
+#
+# 模型（约 486 MB，small）：
+#   python -m py_example.voice.download_model --model small
+#
+# 说明：faster-whisper 会连带安装 ctranslate2、tokenizers、onnxruntime、av、
+# huggingface_hub 等，总体积约 200 MB，下载时间取决于网络。
+
+faster-whisper>=1.0.0
+
+# 音频数组处理（faster-whisper 的 transcribe 接受 float32 numpy 数组）
+numpy>=1.24

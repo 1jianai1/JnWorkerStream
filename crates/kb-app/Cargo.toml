@@ -1,0 +1,17 @@
+[package]
+name = "kb-app"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "JnWorkerStream app core: link state machine, frame/segment routing, voice pipeline, events & snapshot (no Tauri)"
+
+[dependencies]
+kb-audio = { path = "../kb-audio" }
+kb-inject = { path = "../kb-inject" }
+kb-protocol = { path = "../kb-protocol" }
+kb-transport = { path = "../kb-transport" }
+kb-voice = { path = "../kb-voice" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
