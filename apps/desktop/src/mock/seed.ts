@@ -12,7 +12,14 @@ import type {
   TransportKind,
   VoiceState,
 } from "../lib/types";
-import { DEFAULT_LOCALE, isLocale, type Locale } from "../lib/i18n-core";
+import { isLocale, type Locale } from "../lib/i18n-core";
+import {
+  DEFAULT_SETTINGS,
+  SETTINGS_KEY,
+  cloneSettings,
+  mergeDeep,
+  persistSettings,
+} from "../lib/settings";
 
 export type Scenario =
   | "default"
@@ -31,64 +38,10 @@ export interface ConfigIssue {
   backup?: string;
 }
 
-const SETTINGS_KEY = "jnws.p1.settings";
 const KEYS_KEY = "jnws.p1.keys";
 
-export const DEFAULT_SETTINGS: AppSettings = {
-  schema_version: 1,
-  link: {
-    kind: "usb",
-    auto_reconnect: true,
-    usb: { device: "USB CDC · COM3" },
-    ble: { name: "SF32", paired_only: true },
-  },
-  audio: {
-    receive: false,
-    save_dir: "logs/voice",
-    playback: true,
-    buf_ms: 20,
-  },
-  voice: {
-    enabled: false,
-    inject_mode: "auto",
-    asr: { model_path: "models/faster-whisper-small", device: "cpu", compute_type: "int8", language: "zh" },
-  },
-  logging: { level_min: "info", max_entries: 5000 },
-  window: { width: 1280, height: 800 },
-  ui: {
-    theme: "light",
-    locale: DEFAULT_LOCALE,
-    keypad: { renderer: "auto" },
-  },
-};
-
-export function mergeDeep<T>(base: T, patch: DeepPartial<T> | undefined): T {
-  if (!patch) return base;
-  const output = { ...base } as Record<string, unknown>;
-  for (const [key, value] of Object.entries(patch)) {
-    if (value === undefined) continue;
-    const current = output[key];
-    const currentRecord = current as Record<string, unknown> | undefined;
-    const nextRecord = value as Record<string, unknown> | undefined;
-    if (
-      currentRecord &&
-      nextRecord &&
-      typeof currentRecord === "object" &&
-      typeof nextRecord === "object" &&
-      !Array.isArray(currentRecord) &&
-      !Array.isArray(nextRecord)
-    ) {
-      output[key] = mergeDeep(currentRecord, nextRecord as DeepPartial<typeof currentRecord>);
-    } else {
-      output[key] = value;
-    }
-  }
-  return output as T;
-}
-
-export function cloneSettings(settings: AppSettings): AppSettings {
-  return JSON.parse(JSON.stringify(settings)) as AppSettings;
-}
+// 设置相关的纯逻辑放在 lib（真实后端也用），这里只做转出以保持既有 import 不变。
+export { DEFAULT_SETTINGS, cloneSettings, mergeDeep, persistSettings };
 
 function readStoredSettings(): { settings: AppSettings; issue: ConfigIssue } {
   try {
@@ -448,14 +401,6 @@ export function isScenario(value: string | null): value is Scenario {
     value === "empty" ||
     value === "corrupt-settings"
   );
-}
-
-export function persistSettings(settings: AppSettings): void {
-  try {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-  } catch {
-    /* storage is best-effort in the mock */
-  }
 }
 
 export function persistKeys(configs: KeyConfig[]): void {

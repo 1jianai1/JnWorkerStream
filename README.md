@@ -40,6 +40,7 @@ cargo tauri dev
 ## 文档
 
 - 需求基线：`py_example/host_develop_requirement.md`
+- 入门导读（不熟前端/Rust 从这读）：`docs/beginner/README.md`
 - 文档索引：`docs/README.md`
 - 阶段门禁：`docs/acceptance.md`
 - 接口冻结清单：`docs/interfaces.md`

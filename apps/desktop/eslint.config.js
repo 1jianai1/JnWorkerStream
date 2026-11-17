@@ -30,7 +30,9 @@ export default tseslint.config(
   },
   {
     files: ["src/**/*.{ts,tsx}"],
-    ignores: ["src/mock/**", "src/lib/ipc.ts"],
+    // 后端实现（ipc.ts 与 tauri-backend.ts）可以碰 mock：它们负责把 Mock 或真实 Rust
+    // 适配成同一个 Backend 接口；组件仍然只能通过 lib/ipc.ts 拿 backend。
+    ignores: ["src/mock/**", "src/lib/ipc.ts", "src/lib/tauri-backend.ts"],
     rules: {
       "no-restricted-imports": [
         "error",

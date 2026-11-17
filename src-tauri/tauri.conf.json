@@ -10,19 +10,7 @@
     "frontendDist": "../apps/desktop/dist"
   },
   "app": {
-    "windows": [
-      {
-        "label": "main",
-        "title": "JnWorkerStream",
-        "width": 1280,
-        "height": 800,
-        "minWidth": 900,
-        "minHeight": 600,
-        "resizable": true,
-        "center": true,
-        "theme": "Light"
-      }
-    ],
+    "windows": [],
     "security": {
       "csp": null
     }

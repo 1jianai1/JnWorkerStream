@@ -66,6 +66,9 @@ importers:
       lightningcss:
         specifier: ^1.33.0
         version: 1.33.0
+      lru-cache:
+        specifier: ^11.5.3
+        version: 11.5.3
       picomatch:
         specifier: ^4.0.7
         version: 4.0.7

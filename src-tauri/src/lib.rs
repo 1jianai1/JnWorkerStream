@@ -124,6 +124,16 @@ fn link_reconnect_policy(auto: bool, state: tauri::State<'_, AppState>) -> Resul
     Ok(())
 }
 
+/// `link.retry_now`：把下一次退避提前到当前时刻（UI 的「立即重试」）。
+#[tauri::command]
+fn link_retry(state: tauri::State<'_, AppState>) -> Result<bool, CommandError> {
+    Ok(state
+        .core
+        .lock()
+        .map_err(|_| CommandError::lock())?
+        .retry_now())
+}
+
 #[tauri::command]
 fn transport_stats(state: tauri::State<'_, AppState>) -> Result<serde_json::Value, CommandError> {
     let snapshot = state
@@ -172,9 +182,9 @@ fn asr_script() -> String {
     std::env::var("JNWS_ASR_SCRIPT").unwrap_or_else(|_| {
         let mut path = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"));
         path.pop();
-        path.push("sidecars")
-            .push("asr")
-            .push("main.py");
+        path.push("sidecars");
+        path.push("asr");
+        path.push("main.py");
         path.display().to_string()
     })
 }
@@ -193,10 +203,12 @@ fn spawn_poller(app: tauri::AppHandle) {
         .spawn(move || loop {
             let events = {
                 let state = app.state::<AppState>();
-                match state.core.lock() {
-                    Ok(mut core) => core.poll(),
+                // guard 先于 `state` 声明，drop 顺序保证它在 `state` 之前释放。
+                let mut core = match state.core.lock() {
+                    Ok(guard) => guard,
                     Err(_) => break,
-                }
+                };
+                core.poll()
             };
             for event in events {
                 let _ = app.emit(event.name(), event.payload());
@@ -204,6 +216,25 @@ fn spawn_poller(app: tauri::AppHandle) {
             std::thread::sleep(kb_app::POLL_INTERVAL);
         })
         .expect("启动 poller 失败");
+}
+
+/// WebView2 用户数据目录：默认放在**可执行文件旁边**（`cargo run` 时即
+/// `target\debug\webview2-data`），不写 C 盘的 `%LOCALAPPDATA%`。
+///
+/// 原因：本机 `%LOCALAPPDATA%` 下建目录会被拒绝（`os error 5`），而工程目录可写；
+/// 显式指定也便于排查 “0x800700AA 资源在使用中”（数据目录被占住时会上报）。
+///
+/// 优先级：`JNWS_WEBVIEW_DATA_DIR` → `<exe 所在目录>/webview2-data` → 系统临时目录。
+fn webview_data_dir() -> std::path::PathBuf {
+    if let Some(dir) = std::env::var_os("JNWS_WEBVIEW_DATA_DIR") {
+        return std::path::PathBuf::from(dir);
+    }
+    if let Ok(exe) = std::env::current_exe() {
+        if let Some(parent) = exe.parent() {
+            return parent.join("webview2-data");
+        }
+    }
+    std::env::temp_dir().join("jnws-webview2")
 }
 
 pub fn run() {
@@ -215,10 +246,30 @@ pub fn run() {
             link_connect,
             link_disconnect,
             link_reconnect_policy,
+            link_retry,
             transport_stats,
             voice_set_enabled,
         ])
         .setup(|app| {
+            let data_dir = webview_data_dir();
+            if let Err(error) = std::fs::create_dir_all(&data_dir) {
+                eprintln!("创建 WebView2 数据目录失败：{data_dir:?} {error}");
+            }
+            let _window = tauri::WebviewWindowBuilder::new(
+                app,
+                "main",
+                tauri::WebviewUrl::App("index.html".into()),
+            )
+            .title("JnWorkerStream")
+            .inner_size(1280.0, 800.0)
+            .min_inner_size(900.0, 600.0)
+            .center()
+            .data_directory(data_dir.clone())
+            .build()
+            .map_err(|error| {
+                eprintln!("创建主窗口失败（data_dir={data_dir:?}）：{error:?}");
+                error
+            })?;
             spawn_poller(app.handle().clone());
             Ok(())
         })

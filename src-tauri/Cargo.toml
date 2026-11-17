@@ -5,6 +5,12 @@ edition.workspace = true
 license.workspace = true
 description = "JnWorkerStream desktop shell (P2c: thin adapter over kb-app)"
 
+[features]
+# 默认把 apps/desktop/dist 打进二进制，`cargo run -p jnworkerstream` 即可直接看界面，
+# 不需要另开 vite dev server。需要 HMR 时用 tauri CLI 的 dev（它会覆盖此行为）。
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
 [lib]
 name = "jnworkerstream_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]

@@ -7,22 +7,36 @@ target/
 coverage/
 playwright-report/
 test-results/
+*.tsbuildinfo
+.pnpm-store/
+
+# tauri 生成物（schemas 由 CLI/build 生成）
+src-tauri/gen/
 
 # python
 __pycache__/
 *.pyc
 
-skills
-docs
 # runtime artefacts (docs/interfaces.md §6)
 models/
 logs/
+webview2-data/
 *.wav
 *.csv
 *.pdb
 *.ilk
 *.log
 
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
 # local env
 .env
 .env.local
+
+docs
+skills
