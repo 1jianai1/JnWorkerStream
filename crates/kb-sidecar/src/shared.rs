@@ -136,4 +136,14 @@ impl Shared {
         }
         lines.push_back(line);
     }
+
+    /// 最近 `n` 行 stderr（诊断用；hello 超时时带进错误信息）。
+    pub fn stderr_tail(&self, n: usize) -> Vec<String> {
+        let lines = self
+            .stderr
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
+        let skip = lines.len().saturating_sub(n);
+        lines.iter().skip(skip).cloned().collect()
+    }
 }

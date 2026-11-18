@@ -39,6 +39,7 @@ export class MockBackend implements Backend {
   private statsTimer?: number;
   private logTimer?: number;
   private reconnectTimer?: number;
+  private connectTimer?: number;
   private voiceElapsedTimer?: number;
   private voiceTimers: number[] = [];
   private tick = 0;
@@ -166,7 +167,15 @@ export class MockBackend implements Backend {
     const address = kindAddress(kind);
     this.commit({ link: { state: "connecting", kind, address } });
     this.addLog("info", "link", "mock.log.linkConnecting", { kind, address });
-    window.setTimeout(() => this.establish(false), 800);
+    this.connectTimer = window.setTimeout(() => this.establish(false), 800);
+  };
+
+  cancelConnect = async (): Promise<void> => {
+    if (this.state.link.state !== "connecting") return;
+    if (this.connectTimer !== undefined) window.clearTimeout(this.connectTimer);
+    this.connectTimer = undefined;
+    this.commit({ link: { state: "disconnected", kind: this.state.settings.link.kind } });
+    this.addLog("warn", "link", "mock.log.linkDown", { reason: "连接已取消" });
   };
 
   disconnect = async (): Promise<void> => {

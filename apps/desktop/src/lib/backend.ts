@@ -20,6 +20,8 @@ export interface Backend {
   getState(): AppState;
   getConfigIssue(): ConfigIssue;
   connect(): Promise<void>;
+  /** 连接中（`link.state === "connecting"`）时终止本次连接。 */
+  cancelConnect(): Promise<void>;
   disconnect(): Promise<void>;
   retry(): Promise<void>;
   simulateLinkLoss(): Promise<void>;

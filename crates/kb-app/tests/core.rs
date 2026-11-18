@@ -133,7 +133,7 @@ fn segment_goes_through_asr_and_injection() {
         .iter()
         .find(|event| matches!(event, CoreEvent::VoiceResult(_)))
         .expect("voice.result");
-    assert_eq!(event.name(), "voice.result");
+    assert_eq!(event.name(), "voice-result");
     let payload = event.payload();
     assert_eq!(payload["seg_id"], 7);
     assert_eq!(payload["text"], "len=1280");
@@ -150,8 +150,20 @@ fn disconnect_resets_link_snapshot() {
 
 #[test]
 fn event_names_match_tauri_contract() {
-    let core = core();
-    let _ = core;
+    // Tauri 2 只接受字母数字和 `- / : _`；带 `.` 的 emit 会被拒绝（IllegalEventName）。
+    let names = [
+        "link-state",
+        "frame-batch",
+        "voice-result",
+        "app-error",
+    ];
+    for name in names {
+        assert!(
+            name.chars()
+                .all(|c| c.is_alphanumeric() || matches!(c, '-' | '/' | ':' | '_')),
+            "事件名 {name} 含 Tauri 不允许的字符"
+        );
+    }
     assert_eq!(LinkState::Connected.as_str(), "connected");
     assert_eq!(LinkState::Reconnecting.as_str(), "reconnecting");
 }

@@ -172,9 +172,6 @@ export function AudioPage() {
                       <Button variant="ghost" size="sm" icon="copy" onClick={() => void copy(voice.text ?? "")}>
                         {t("audio.voice.copyText")}
                       </Button>
-                      <Button variant="ghost" size="sm" icon="download" onClick={() => void copy(voice.wav_path ?? "")}>
-                        {t("audio.voice.copyPath")}
-                      </Button>
                     </span>
                   </div>
                   <p className="voice-text" data-testid="voice-text">{voice.text}</p>
@@ -182,7 +179,6 @@ export function AudioPage() {
                     <span>{t("audio.voice.language")} <strong>{voice.language ?? "—"}</strong></span>
                     <span>{t("audio.voice.audioDuration")} <strong className="tabular">{formatDuration(voice.audio_ms ?? 0)}</strong></span>
                     <span>{t("audio.voice.latency")} <strong className="tabular">{formatDuration(voice.latency_ms ?? 0)}</strong></span>
-                    <span className="muted mono">{voice.wav_path}</span>
                   </div>
                   <div className={`inject-row inject-row--${voice.inject?.outcome ?? "none"}`}>
                     <Icon
@@ -192,6 +188,9 @@ export function AudioPage() {
                     <span>{t(`audio.inject.${voice.inject?.outcome ?? "none"}`)}</span>
                     {voice.inject?.outcome === "blocked" ? <span className="muted">{t("audio.inject.uipiHint")}</span> : null}
                   </div>
+                  {voice.inject?.outcome === "blocked" && (voice.inject.error ?? voice.last_error) ? (
+                    <p className="field__hint" data-testid="inject-error">{voice.inject.error ?? voice.last_error}</p>
+                  ) : null}
                 </div>
               ) : null}
 
@@ -208,12 +207,6 @@ export function AudioPage() {
                   >
                     {errorLabel} · {t("audio.voice.failureRetained")}
                   </Banner>
-                  <div className="row row--between row--wrap">
-                    <span className="mono muted">{voice.wav_path}</span>
-                    <Button variant="ghost" size="sm" icon="copy" onClick={() => void copy(voice.wav_path ?? "")}>
-                      {t("audio.voice.copyPath")}
-                    </Button>
-                  </div>
                 </div>
               ) : null}
             </div>
@@ -273,12 +266,7 @@ export function AudioPage() {
                     <span className="input-group__suffix">ms</span>
                   </div>
                 </Field>
-                <Field label={t("audio.playback.saveDir")} htmlFor="audio-dir">
-                  <input id="audio-dir" className="input mono" value={state.settings.audio.save_dir} readOnly />
-                </Field>
-                <Field label={t("audio.playback.wav")} htmlFor="audio-wav">
-                  <input id="audio-wav" className="input mono" value={voice.wav_path ?? t("common.notAvailable")} readOnly />
-                </Field>
+                <p className="field__hint">{t("audio.playback.noWav")}</p>
               </div>
             </Card>
           </div>

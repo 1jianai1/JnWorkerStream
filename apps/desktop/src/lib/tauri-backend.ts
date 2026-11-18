@@ -136,16 +136,21 @@ export class TauriBackend implements Backend {
   }
 
   private async bootstrap(): Promise<void> {
-    try {
-      const [unlink, unframes, unvoice, unerror] = await Promise.all([
-        listen<LinkStateEvent>("link.state", (event) => this.onLinkState(event.payload)),
-        listen<FrameBatchEvent>("frame.batch", (event) => this.onFrameBatch(event.payload)),
-        listen<VoiceResultEvent>("voice.result", (event) => this.onVoiceResult(event.payload)),
-        listen<AppErrorEvent>("app.error", (event) => this.onAppError(event.payload)),
-      ]);
-      this.unlisten = [unlink, unframes, unvoice, unerror];
-    } catch (error) {
-      this.addLog("error", "app", `事件订阅失败：${commandError(error)}`);
+    // 事件名不能带点号：Tauri 2 只允许字母数字和 `- / : _`，带 `.` 的 listen/emit
+    // 会直接报 IllegalEventName（ADR-021）。这里用连字符名，且用 allSettled
+    // 保证一个事件订阅失败不影响其余事件。
+    const settled = await Promise.allSettled([
+      listen<LinkStateEvent>("link-state", (event) => this.onLinkState(event.payload)),
+      listen<FrameBatchEvent>("frame-batch", (event) => this.onFrameBatch(event.payload)),
+      listen<VoiceResultEvent>("voice-result", (event) => this.onVoiceResult(event.payload)),
+      listen<AppErrorEvent>("app-error", (event) => this.onAppError(event.payload)),
+    ]);
+    for (const result of settled) {
+      if (result.status === "fulfilled") {
+        this.unlisten.push(result.value);
+      } else {
+        this.addLog("error", "app", `事件订阅失败：${commandError(result.reason)}`);
+      }
     }
     await this.refresh();
     this.refreshTimer = window.setInterval(() => void this.refresh(), 1000);
@@ -323,11 +328,17 @@ export class TauriBackend implements Backend {
     });
     if (payload.note) {
       this.addLog("warn", "voice", `段 ${payload.seg_id} 未产出文本：${payload.note}`);
+    } else if (!payload.inject.ok) {
+      this.addLog(
+        "error",
+        "voice",
+        `识别完成 seg=${payload.seg_id} ${payload.latency_ms}ms「${payload.text}」，但注入失败：${payload.inject.error ?? "未知原因"}`,
+      );
     } else {
       this.addLog(
         "info",
         "voice",
-        `识别完成 seg=${payload.seg_id} ${payload.latency_ms}ms「${payload.text}」`,
+        `识别完成 seg=${payload.seg_id} ${payload.latency_ms}ms「${payload.text}」；注入=${payload.inject.mode}`,
       );
     }
   }
@@ -357,10 +368,28 @@ export class TauriBackend implements Backend {
       });
       await this.refresh();
     } catch (error) {
+      const detail = commandError(error);
+      if (detail.startsWith("E_CANCELLED")) {
+        this.commit({ link: { ...this.state.link, state: "disconnected", last_error: undefined } });
+        this.addLog("info", "link", "已终止连接");
+        return;
+      }
       this.commit({
-        link: { ...this.state.link, state: "error", last_error: commandError(error) },
+        link: { ...this.state.link, state: "error", last_error: detail },
       });
-      this.addLog("error", "link", `连接失败：${commandError(error)}`);
+      this.addLog("error", "link", `连接失败：${detail}`);
+    }
+  };
+
+  cancelConnect = async (): Promise<void> => {
+    if (this.state.link.state !== "connecting") return;
+    // 物理连接无法立刻中断：先让 UI 回到「已断开」，后台在本次请求结束（≤10 s）后自行清理。
+    this.commit({ link: { ...this.state.link, state: "disconnected" } });
+    try {
+      await invoke("link_cancel_connect");
+      this.addLog("warn", "link", "已请求终止连接（后台最多 10 s 内释放）");
+    } catch (error) {
+      this.addLog("warn", "link", `终止连接失败：${commandError(error)}`);
     }
   };
 
@@ -442,7 +471,7 @@ export class TauriBackend implements Backend {
     this.addLog(
       "warn",
       "voice",
-      `注入模式 ${mode} 仅保存在本机；Rust 侧当前固定 auto（sendinput→clipboard 兜底）`,
+      `注入模式 ${mode} 仅保存在本机；Rust 侧当前固定 auto（SendInput 优先，失败回退剪贴板）`,
     );
   };
 

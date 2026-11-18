@@ -61,6 +61,8 @@ pub struct BleTransport {
     last_error: Arc<Mutex<Option<String>>>,
     policy: ReconnectPolicy,
     retry: RetryState,
+    /// 手动 `open` 的超时预算（默认 35 s；UI 可调小，例如连接中 10 s 自动放弃）。
+    connect_timeout: Duration,
     opened_before: bool,
     sidecar_dead_reported: bool,
 }
@@ -84,9 +86,19 @@ impl BleTransport {
             last_error: Arc::new(Mutex::new(None)),
             policy: ReconnectPolicy::default(),
             retry: RetryState::default(),
+            connect_timeout: CONNECT_TIMEOUT,
             opened_before: false,
             sidecar_dead_reported: false,
         }
+    }
+
+    /// 设置手动连接的超时（UI 用，例如「10 s 连不上就放弃」）。
+    pub fn set_connect_timeout(&mut self, timeout: Duration) {
+        self.connect_timeout = timeout;
+    }
+
+    pub fn connect_timeout(&self) -> Duration {
+        self.connect_timeout
     }
 
     pub fn is_connected(&self) -> bool {
@@ -147,7 +159,8 @@ impl BleTransport {
             }
         }
         self.cfg = cfg.clone();
-        let link = self.connect_with(cfg, CONNECT_TIMEOUT)?;
+        let timeout = self.connect_timeout;
+        let link = self.connect_with(cfg, timeout)?;
         self.last_cfg = Some(cfg.clone());
         self.retry.attempt = 0;
         self.retry.due_at_ms = None;

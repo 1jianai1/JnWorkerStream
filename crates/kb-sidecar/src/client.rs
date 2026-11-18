@@ -91,6 +91,7 @@ impl SidecarClient {
                 return Err(SidecarError::HelloTimeout {
                     name: config.name.clone(),
                     timeout_ms: config.hello_timeout.as_millis() as u64,
+                    stderr: shared.stderr_tail(8),
                 });
             }
         };

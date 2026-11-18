@@ -26,6 +26,8 @@ pub enum TransportError {
     DeviceNotFound { detail: String },
     /// BLE 连接超时。
     ConnectTimeout { detail: String },
+    /// 用户主动取消（例如连接中点了「终止连接」）。
+    Cancelled,
     /// 单帧超过链路 payload 上限（ADR-011）。
     PayloadTooLarge { len: usize, max: usize },
     /// sidecar 不可用/已退出。
@@ -47,6 +49,7 @@ impl TransportError {
             Self::Io { .. } => "E_IO",
             Self::DeviceNotFound { .. } => "E_BLE_DEVICE_NOT_FOUND",
             Self::ConnectTimeout { .. } => "E_BLE_CONNECT_TIMEOUT",
+            Self::Cancelled => "E_CANCELLED",
             Self::PayloadTooLarge { .. } => "E_PAYLOAD_TOO_LARGE",
             Self::Sidecar { .. } => "E_SIDECAR_UNAVAILABLE",
             Self::Protocol { .. } => "E_SIDECAR_PROTOCOL",
@@ -87,6 +90,7 @@ impl TransportError {
             Self::Io { detail } => detail.clone(),
             Self::DeviceNotFound { detail } => format!("未发现 BLE 设备：{detail}"),
             Self::ConnectTimeout { detail } => format!("BLE 连接超时：{detail}"),
+            Self::Cancelled => "操作已取消".to_string(),
             Self::PayloadTooLarge { len, max } => {
                 format!("单帧 {len} B 超过链路上限 {max} B（BLE 不分片）")
             }

@@ -8,6 +8,8 @@
 //!
 //! 为什么不在 `src-tauri` 里写：本机拉不到 Tauri 依赖，写在壳里等于无法编译验证。
 
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 use std::time::Duration;
 
 use kb_audio::VoiceSession;
@@ -118,12 +120,17 @@ pub enum CoreEvent {
 }
 
 impl CoreEvent {
+    /// Tauri 事件名。
+    ///
+    /// **不能带点号**：Tauri 2 的 `EventName` 只允许字母数字和 `- / : _`
+    /// （`tauri/src/event/event_name.rs`），带 `.` 的 `emit` 会直接返回
+    /// `IllegalEventName`。这里用连字符代替文档里的逻辑名 `link.state` 等（ADR-021）。
     pub fn name(&self) -> &'static str {
         match self {
-            Self::LinkState(_) => "link.state",
-            Self::FrameBatch(_) => "frame.batch",
-            Self::VoiceResult(_) => "voice.result",
-            Self::Error { .. } => "app.error",
+            Self::LinkState(_) => "link-state",
+            Self::FrameBatch(_) => "frame-batch",
+            Self::VoiceResult(_) => "voice-result",
+            Self::Error { .. } => "app-error",
         }
     }
 
@@ -213,9 +220,15 @@ pub struct Core<I: TextInjector = kb_inject::Injector> {
     failures: u64,
     last_text: Option<String>,
     pending_frames: Vec<FrameBrief>,
+    /// 取消令牌：命令层可以在**不拿 Core 锁**的情况下置位，从而打断「连接中」的等待。
+    cancel: Arc<AtomicBool>,
+    connect_timeout: Duration,
 }
 
 impl<I: TextInjector> Core<I> {
+    /// 手动连接的超时：连不上就自动结束，避免 UI 无限转圈。
+    pub const DEFAULT_CONNECT_TIMEOUT: Duration = Duration::from_secs(10);
+
     pub fn new(launch: SidecarLaunch) -> Self {
         Self {
             transport: BleTransport::new(launch),
@@ -228,7 +241,20 @@ impl<I: TextInjector> Core<I> {
             failures: 0,
             last_text: None,
             pending_frames: Vec::new(),
+            cancel: Arc::new(AtomicBool::new(false)),
+            connect_timeout: Self::DEFAULT_CONNECT_TIMEOUT,
         }
+    }
+
+    /// 取消令牌句柄：命令层保存一份，点「终止连接」时直接置位，不需要抢 Core 锁。
+    pub fn cancel_handle(&self) -> Arc<AtomicBool> {
+        Arc::clone(&self.cancel)
+    }
+
+    /// 设置手动连接超时（默认 10 s）。
+    pub fn set_connect_timeout(&mut self, timeout: Duration) {
+        self.connect_timeout = timeout;
+        self.transport.set_connect_timeout(timeout);
     }
 
     /// 挂上语音链路（ASR 客户端 + 注入器）；`None` 表示只收不识别。
@@ -253,15 +279,36 @@ impl<I: TextInjector> Core<I> {
     }
 
     /// `link.connect`。
+    ///
+    /// 连接最多等 `connect_timeout`（默认 10 s）；期间用户点「终止连接」会把
+    /// [`Self::cancel`] 置位，连接返回后立刻清理并回 `E_CANCELLED`。
     pub fn connect_ble(&mut self, cfg: BleCfg) -> Result<LinkInfo, kb_transport::TransportError> {
+        self.cancel.store(false, Ordering::SeqCst);
+        self.transport.set_connect_timeout(self.connect_timeout);
         self.bump();
         self.link.state = LinkState::Connecting.as_str();
-        match self.transport.open(&TransportCfg::Ble(cfg)) {
+        self.link.last_error = None;
+
+        let result = self.transport.open(&TransportCfg::Ble(cfg));
+        if self.cancel.swap(false, Ordering::SeqCst) {
+            let _ = self.transport.close();
+            self.bump();
+            self.link = LinkSnapshot {
+                revision: self.revision,
+                state: LinkState::Disconnected.as_str(),
+                kind: "ble",
+                ..LinkSnapshot::default()
+            };
+            return Err(kb_transport::TransportError::Cancelled);
+        }
+
+        match result {
             Ok(link) => {
                 self.apply_link(&link);
                 Ok(link)
             }
             Err(error) => {
+                self.bump();
                 self.link.state = LinkState::Error.as_str();
                 self.link.last_error = Some(error.message());
                 Err(error)
@@ -370,6 +417,13 @@ impl<I: TextInjector> Core<I> {
             });
             match frame.ty {
                 TYPE_AUDIO_CTL => {
+                    // PTT 按下（ev=0）时先记下当前前台窗口：识别结果 1–3 s 后才回来，
+                    // 期间用户可能点回上位机，注入时要能切回他说话时的目标窗口。
+                    if frame.payload.first() == Some(&0) {
+                        if let Some(pipeline) = self.voice.as_mut() {
+                            pipeline.begin_segment();
+                        }
+                    }
                     if let Some(segment) = self.session.on_ctl_frame(&frame, at_ms) {
                         completed.push(self.handle_segment(&segment));
                     }

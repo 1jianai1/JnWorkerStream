@@ -8,7 +8,12 @@ pub enum SidecarError {
     /// 进程启动失败。
     Spawn { detail: String },
     /// hello 握手超时。
-    HelloTimeout { name: String, timeout_ms: u64 },
+    HelloTimeout {
+        name: String,
+        timeout_ms: u64,
+        /// sidecar 退出前最后几行 stderr（定位「python 缺依赖 / 脚本路径错」最有效）。
+        stderr: Vec<String>,
+    },
     /// 帧/JSON 非法。
     Protocol { detail: String },
     /// 协议版本不匹配。
@@ -62,8 +67,20 @@ impl fmt::Display for SidecarError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Spawn { detail } => write!(f, "启动 sidecar 失败：{detail}"),
-            Self::HelloTimeout { name, timeout_ms } => {
-                write!(f, "sidecar {name} hello 超时（{timeout_ms} ms）")
+            Self::HelloTimeout {
+                name,
+                timeout_ms,
+                stderr,
+            } => {
+                if stderr.is_empty() {
+                    write!(f, "sidecar {name} hello 超时（{timeout_ms} ms）")
+                } else {
+                    write!(
+                        f,
+                        "sidecar {name} hello 超时（{timeout_ms} ms）；stderr: {}",
+                        stderr.join(" | ")
+                    )
+                }
             }
             Self::Protocol { detail } => write!(f, "sidecar 协议错误：{detail}"),
             Self::VersionMismatch { got, want } => {

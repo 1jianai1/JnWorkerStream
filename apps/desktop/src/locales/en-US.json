@@ -131,11 +131,12 @@
       "pattern": "Pattern",
       "connect": "Connect",
       "disconnect": "Disconnect",
+      "cancelConnect": "Cancel connect",
       "simulateLoss": "Simulate link loss",
       "connecting": "Connecting…",
       "hintDisconnected": "Pick a transport and connect. The simulator is useful for validating the UI and statistics.",
       "hintUsb": "USB CDC connects through device enumeration; P1 only demonstrates state and statistics and never opens a real port.",
-      "hintBle": "BLE arrives in P2c; P1 only demonstrates states and parameters.",
+      "hintBle": "BLE gives up automatically after 10 s; you can also press “Cancel connect”.",
       "hintSim": "The simulator generates increasing payloads at 20 Hz for regression and screenshots."
     },
     "banner": {
@@ -318,8 +319,7 @@
       "receive": "Receive audio segments",
       "playback": "Live playback",
       "buffer": "Playback buffer",
-      "saveDir": "Save directory",
-      "wav": "Latest WAV",
+      "noWav": "Recognition stays in memory and on this page; no WAV is saved",
       "missing": "{count} blocks missing; padded with silence"
     },
     "stats": {
@@ -563,7 +563,10 @@
     "E_INJECT_NO_FOCUS": "No foreground window",
     "E_DEVICE_OFFLINE": "Device offline",
     "E_CONFIG_CORRUPT": "Configuration corrupt",
-    "E_WRITE_FAILED": "Write failed"
+    "E_WRITE_FAILED": "Write failed",
+    "voice_disabled": "Voice pipeline is off (click Enable first)",
+    "empty_text": "No speech recognized",
+    "empty_audio": "No valid audio in this segment"
   },
   "mock": {
     "log": {

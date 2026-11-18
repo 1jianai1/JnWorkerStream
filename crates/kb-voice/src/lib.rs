@@ -201,16 +201,27 @@ fn pcm_to_bytes(pcm: &[i16]) -> Vec<u8> {
 
 /// 注入抽象：生产用 [`kb_inject::Injector`]，测试用记录型假实现。
 pub trait TextInjector {
+    /// PTT 按下（段开始）时调用；生产实现用它记住目标窗口，测试默认不用关心。
+    fn begin_segment(&mut self) {}
+
     fn inject_text(&mut self, text: &str) -> InjectOutcome;
 }
 
 impl TextInjector for kb_inject::Injector {
+    fn begin_segment(&mut self) {
+        kb_inject::Injector::begin_segment(self);
+    }
+
     fn inject_text(&mut self, text: &str) -> InjectOutcome {
         self.inject(text, InjectMode::Auto)
     }
 }
 
 impl<T: TextInjector + ?Sized> TextInjector for Box<T> {
+    fn begin_segment(&mut self) {
+        (**self).begin_segment();
+    }
+
     fn inject_text(&mut self, text: &str) -> InjectOutcome {
         (**self).inject_text(text)
     }
@@ -278,6 +289,11 @@ impl<I: TextInjector> VoicePipeline<I> {
 
     pub fn injector_mut(&mut self) -> &mut I {
         &mut self.injector
+    }
+
+    /// PTT 按下时调用：让注入器记住当前光标所在的窗口。
+    pub fn begin_segment(&mut self) {
+        self.injector.begin_segment();
     }
 
     /// 处理一个已封口的录音段：解码 → 识别 → 注入。

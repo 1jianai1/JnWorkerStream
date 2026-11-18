@@ -53,12 +53,17 @@ impl From<kb_sidecar::SidecarError> for CommandError {
 
 struct AppState {
     core: Mutex<Core<kb_inject::Injector>>,
+    /// 与 `Core` 共享的取消令牌；置位不需要拿 Core 锁，所以「终止连接」不会被连接流程阻塞。
+    cancel: std::sync::Arc<std::sync::atomic::AtomicBool>,
 }
 
 impl Default for AppState {
     fn default() -> Self {
+        let core = Core::new(kb_transport::SidecarLaunch::default());
+        let cancel = core.cancel_handle();
         Self {
-            core: Mutex::new(Core::new(kb_transport::SidecarLaunch::default())),
+            core: Mutex::new(core),
+            cancel,
         }
     }
 }
@@ -75,13 +80,16 @@ fn app_ping() -> serde_json::Value {
 }
 
 /// `link.connect`：BLE 参数逐字段传入（`kb_transport::BleCfg` 不带 serde 依赖）。
+///
+/// 用 `async` + `spawn_blocking`：连接是阻塞调用（最长 `Core::DEFAULT_CONNECT_TIMEOUT` = 10 s），
+/// 放在主线程会把整个 WebView 卡住（点击无响应）。同步命令在 Tauri 里默认跑在主线程。
 #[tauri::command]
-fn link_connect(
+async fn link_connect(
     address: Option<String>,
     name: Option<String>,
     paired_only: Option<bool>,
     scan_timeout_ms: Option<u32>,
-    state: tauri::State<'_, AppState>,
+    app: tauri::AppHandle,
 ) -> Result<serde_json::Value, CommandError> {
     let cfg = BleCfg {
         address,
@@ -89,19 +97,38 @@ fn link_connect(
         paired_only: paired_only.unwrap_or(true),
         scan_timeout_ms: scan_timeout_ms.unwrap_or(6_000),
     };
-    let link = state
-        .core
-        .lock()
-        .map_err(|_| CommandError::lock())?
-        .connect_ble(cfg)?;
-    Ok(serde_json::json!({
-        "kind": link.kind.as_str(),
-        "state": link.state,
-        "address": link.address,
-        "mtu": link.mtu,
-        "max_payload": link.max_payload,
-        "opened_at_ms": link.opened_at_ms,
-    }))
+    let handle = app.clone();
+    let joined = tauri::async_runtime::spawn_blocking(move || {
+        let state = handle.state::<AppState>();
+        let mut core = state.core.lock().map_err(|_| CommandError::lock())?;
+        core.connect_ble(cfg)
+            .map(|link| {
+                serde_json::json!({
+                    "kind": link.kind.as_str(),
+                    "state": link.state,
+                    "address": link.address,
+                    "mtu": link.mtu,
+                    "max_payload": link.max_payload,
+                    "opened_at_ms": link.opened_at_ms,
+                })
+            })
+            .map_err(CommandError::from)
+    })
+    .await
+    .map_err(|error| CommandError::new("E_IO", format!("连接线程异常：{error}")))?;
+    joined
+}
+
+/// `link.cancel_connect`：连接中由 UI 调用，置位取消令牌。
+///
+/// 物理连接无法立刻中断，因此这里**立即返回**；连接流程在本次请求结束（≤10 s）后自行清理，
+/// 并以 `E_CANCELLED` 结束，UI 先切到「已取消」不需要等它。
+#[tauri::command]
+fn link_cancel_connect(state: tauri::State<'_, AppState>) -> Result<(), CommandError> {
+    state
+        .cancel
+        .store(true, std::sync::atomic::Ordering::SeqCst);
+    Ok(())
 }
 
 #[tauri::command]
@@ -152,30 +179,53 @@ fn transport_stats(state: tauri::State<'_, AppState>) -> Result<serde_json::Valu
 }
 
 /// `voice.set_enabled`：`enabled=false` 只卸载语音链路，不影响收数。
+///
+/// 启动 ASR sidecar + 加载模型 + 预热最长各 60 s。这些动作**在 Core 锁之外**
+/// 用 `spawn_blocking` 做，否则同步命令会卡住主线程、整个窗口无响应（模型 3–6 s）。
 #[tauri::command]
-fn voice_set_enabled(
+async fn voice_set_enabled(
     enabled: bool,
     model_path: Option<String>,
     python: Option<String>,
-    state: tauri::State<'_, AppState>,
+    app: tauri::AppHandle,
 ) -> Result<(), CommandError> {
-    let mut core = state.core.lock().map_err(|_| CommandError::lock())?;
     if !enabled {
-        core.detach_voice();
+        let state = app.state::<AppState>();
+        state
+            .core
+            .lock()
+            .map_err(|_| CommandError::lock())?
+            .detach_voice();
         return Ok(());
     }
-    if core.voice_enabled() {
-        return Ok(());
+    {
+        let state = app.state::<AppState>();
+        let core = state.core.lock().map_err(|_| CommandError::lock())?;
+        if core.voice_enabled() {
+            return Ok(());
+        }
     }
+
     let program = python
         .or_else(|| std::env::var("JNWS_PYTHON").ok())
         .unwrap_or_else(|| "python".to_string());
     let script = asr_script();
-    let mut client = kb_voice::AsrClient::start(kb_voice::AsrLaunch::new(program, script))?;
-    client.load(model_path.as_deref(), 0)?;
-    client.warmup()?;
-    core.attach_voice(client, kb_inject::Injector::new());
-    Ok(())
+    tauri::async_runtime::spawn_blocking(move || {
+        let mut client = kb_voice::AsrClient::start(kb_voice::AsrLaunch::new(program, script))?;
+        client.load(model_path.as_deref(), 0)?;
+        client.warmup()?;
+
+        let state = app.state::<AppState>();
+        let mut core = state.core.lock().map_err(|_| CommandError::lock())?;
+        // 并发点两次「启用」时只挂一条链路；后完成的 client 在这里被 drop。
+        if core.voice_enabled() {
+            return Ok(());
+        }
+        core.attach_voice(client, kb_inject::Injector::new());
+        Ok(())
+    })
+    .await
+    .map_err(|error| CommandError::new("E_IO", format!("语音线程异常：{error}")))?
 }
 
 fn asr_script() -> String {
@@ -211,7 +261,11 @@ fn spawn_poller(app: tauri::AppHandle) {
                 core.poll()
             };
             for event in events {
-                let _ = app.emit(event.name(), event.payload());
+                // Tauri 会校验事件名（只允许字母数字和 `- / : _`）；失败必须可见，
+                // 不能静默吞掉，否则前端只会收到 1 s 一次的快照、看起来“没有动作”。
+                if let Err(error) = app.emit(event.name(), event.payload()) {
+                    eprintln!("emit {} 失败：{error}", event.name());
+                }
             }
             std::thread::sleep(kb_app::POLL_INTERVAL);
         })
@@ -247,10 +301,26 @@ pub fn run() {
             link_disconnect,
             link_reconnect_policy,
             link_retry,
+            link_cancel_connect,
             transport_stats,
             voice_set_enabled,
         ])
         .setup(|app| {
+            #[cfg(windows)]
+            {
+                let integrity = kb_inject::current_integrity();
+                eprintln!(
+                    "[app] integrity={:?} ({})",
+                    integrity,
+                    kb_inject::integrity_label(integrity)
+                );
+                if integrity == Some(0x1000) {
+                    eprintln!(
+                        "[app] WARN: 当前进程是 Low 完整性（受限终端/沙箱），\
+                         无法向普通应用注入；请从普通 PowerShell 或管理员 PowerShell 启动"
+                    );
+                }
+            }
             let data_dir = webview_data_dir();
             if let Err(error) = std::fs::create_dir_all(&data_dir) {
                 eprintln!("创建 WebView2 数据目录失败：{data_dir:?} {error}");

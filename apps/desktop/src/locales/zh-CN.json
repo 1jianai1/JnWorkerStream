@@ -130,11 +130,12 @@
       "pattern": "模式",
       "connect": "连接",
       "disconnect": "断开",
+      "cancelConnect": "终止连接",
       "simulateLoss": "模拟断连",
       "connecting": "正在连接…",
       "hintDisconnected": "选择传输方式后点击连接。模拟链路可用于验证界面与统计。",
       "hintUsb": "USB CDC 通过设备枚举连接；P1 仅演示状态与统计，不打开真实端口。",
-      "hintBle": "BLE 在 P2c 接入，P1 仅演示状态与参数。",
+      "hintBle": "BLE 连接 10 s 未成功会自动结束；也可以点「终止连接」。",
       "hintSim": "模拟链路按 20 Hz 生成递增载荷，用于回归与截图。"
     },
     "banner": {
@@ -317,8 +318,7 @@
       "receive": "接收音频段",
       "playback": "实时播放",
       "buffer": "播放缓冲",
-      "saveDir": "保存目录",
-      "wav": "最近一段 WAV",
+      "noWav": "识别结果只在内存与本页显示，不保存 WAV",
       "missing": "缺少 {count} 块，已以静音补齐"
     },
     "stats": {
@@ -561,7 +561,10 @@
     "E_INJECT_NO_FOCUS": "没有前台窗口",
     "E_DEVICE_OFFLINE": "设备离线",
     "E_CONFIG_CORRUPT": "配置损坏",
-    "E_WRITE_FAILED": "写入失败"
+    "E_WRITE_FAILED": "写入失败",
+    "voice_disabled": "语音链路未启用（请先点「启用」）",
+    "empty_text": "没有识别到文字",
+    "empty_audio": "这一段没有有效音频"
   },
   "mock": {
     "log": {

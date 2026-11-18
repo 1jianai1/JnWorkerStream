@@ -127,15 +127,18 @@ export function LinkPage() {
                   <Button variant="secondary" icon="power" block onClick={() => void backend.disconnect()}>
                     {t("link.control.disconnect")}
                   </Button>
+                ) : connecting ? (
+                  <Button variant="secondary" icon="x" block onClick={() => void backend.cancelConnect()}>
+                    {t("link.control.cancelConnect")}
+                  </Button>
                 ) : (
                   <Button
                     variant="primary"
                     icon={reconnecting ? "refresh" : "link"}
                     block
-                    loading={connecting}
                     onClick={() => void (reconnecting ? backend.retry() : connect())}
                   >
-                    {reconnecting ? t("link.banner.retryNow") : connecting ? t("link.control.connecting") : t("link.control.connect")}
+                    {reconnecting ? t("link.banner.retryNow") : t("link.control.connect")}
                   </Button>
                 )}
                 {reconnecting ? (
